@@ -1,0 +1,336 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+  RESEARCHER
+  FINANCE
+}
+
+enum ProjectStatus {
+  PENDING
+  ACTIVE
+  IN_REVIEW
+  COMPLETE
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
+enum PaymentType {
+  FULL
+  INSTALLMENT
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum ServiceType {
+  RESEARCH
+  DIGITAL_SURVEY
+  SUSTAINABILITY
+  ADVISORY
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(CLIENT)
+  organization  String?
+  phone         String?
+  /// When true, client may download watermarked copies while installment final payment is pending (default: site-only preview).
+  allowWatermarkedDeliverableDownload Boolean @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts    Account[]
+  sessions    Session[]
+  projects    Project[]   @relation("ClientProjects")
+  assignments Assignment[]
+  invoices    Invoice[]   @relation("ClientInvoices")
+  activities     Activity[]
+  orders         Order[]        @relation("ClientOrders")
+  assignedOrders Order[]        @relation("AssigneeOrders")
+  reviewedOrders Order[]        @relation("ReviewerOrders")
+  orderMessages  OrderMessage[]
+  notifications  Notification[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  description String?       @db.Text
+  service     ServiceType
+  status      ProjectStatus @default(PENDING)
+  startDate   DateTime?
+  dueDate     DateTime?
+  budget      Float?
+  clientId    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client      User         @relation("ClientProjects", fields: [clientId], references: [id])
+  quotes      Quote[]
+  assignments Assignment[]
+  invoices    Invoice[]
+  files       File[]
+  activities  Activity[]
+  orders      Order[]
+}
+
+model Quote {
+  id          String   @id @default(cuid())
+  projectId   String
+  amount      Float
+  description String?  @db.Text
+  validUntil  DateTime?
+  approved    Boolean  @default(false)
+  approvedAt  DateTime?
+  paymentType PaymentType @default(FULL)
+  createdAt   DateTime @default(now())
+
+  project     Project  @relation(fields: [projectId], references: [id])
+  invoices    Invoice[]
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  number        String        @unique
+  projectId     String
+  clientId      String
+  quoteId       String?
+  amount        Float
+  amountPaid    Float         @default(0)
+  status        InvoiceStatus @default(DRAFT)
+  paymentType   PaymentType   @default(FULL)
+  dueDate       DateTime?
+  paidAt        DateTime?
+  paystackRef   String?
+  stripeRef     String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  project       Project       @relation(fields: [projectId], references: [id])
+  client        User          @relation("ClientInvoices", fields: [clientId], references: [id])
+  quote         Quote?        @relation(fields: [quoteId], references: [id])
+  payments      Payment[]
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  amount      Float
+  reference   String   @unique
+  gateway     String   // "paystack" | "stripe"
+  status      String   // "success" | "failed" | "pending"
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+}
+
+model Assignment {
+  id          String   @id @default(cuid())
+  projectId   String
+  userId      String
+  role        String   // "lead" | "field" | "analyst"
+  task        String?
+  target      String?
+  progress    Int      @default(0)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  project     Project  @relation(fields: [projectId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model File {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  url       String
+  size      Int
+  type      String
+  createdAt DateTime @default(now())
+
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  projectId String?
+  userId    String?
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  project   Project? @relation(fields: [projectId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model ContactRequest {
+  id           String   @id @default(cuid())
+  name         String
+  organization String?
+  email        String
+  service      String?
+  message      String   @db.Text
+  createdAt    DateTime @default(now())
+  responded    Boolean  @default(false)
+}
+
+enum OrderStatus {
+  SUBMITTED
+  REVIEWING
+  IN_PROGRESS
+  NEEDS_CLARIFICATION
+  PENDING_REVIEW
+  AWAITING_CLIENT_PAYMENT
+  COMPLETED
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryMethod {
+  DOWNLOAD
+  EMAIL
+  BOTH
+}
+
+model Order {
+  id               String        @id @default(cuid())
+  orderNumber      String        @unique
+  clientId         String
+  projectId        String?
+  title            String
+  description      String        @db.Text
+  service          ServiceType
+  deliveryMethod   DeliveryMethod @default(BOTH)
+  deliveryEmail    String?
+  status           OrderStatus   @default(SUBMITTED)
+  priority         String        @default("normal")
+  deadline         DateTime?
+  budget           Float?
+  notes            String?       @db.Text
+  adminNotes       String?       @db.Text
+  assignedTo       String?
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  deliveredAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  client           User          @relation("ClientOrders", fields: [clientId], references: [id])
+  assignee         User?         @relation("AssigneeOrders", fields: [assignedTo], references: [id])
+  reviewer         User?         @relation("ReviewerOrders", fields: [reviewedBy], references: [id])
+  project          Project?      @relation(fields: [projectId], references: [id])
+  briefFiles       OrderBrief[]
+  deliverables     Deliverable[]
+  messages         OrderMessage[]
+  timeline         OrderTimeline[]
+}
+
+model OrderBrief {
+  id        String   @id @default(cuid())
+  orderId   String
+  name      String
+  url       String
+  size      Int
+  type      String
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Deliverable {
+  id           String         @id @default(cuid())
+  orderId      String
+  name         String
+  url          String
+  size         Int
+  type         String
+  uploadedBy   String
+  sentToEmail  Boolean        @default(false)
+  downloadCount Int           @default(0)
+  createdAt    DateTime       @default(now())
+  order        Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model OrderMessage {
+  id        String   @id @default(cuid())
+  orderId   String
+  userId    String
+  message   String   @db.Text
+  isInternal Boolean @default(false)
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model OrderTimeline {
+  id        String   @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  note      String?
+  userId    String?
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
