@@ -16,7 +16,11 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
 const HEARTBEAT_INTERVAL_MS = 4 * 60 * 1000 // 4 minutes
 
+/** Avoid touching the DB during `next build` (e.g. Vercel) — prevents Prisma errors while collecting route data. */
+const isNextBuild = process.env.NEXT_PHASE === 'phase-production-build'
+
 function startHeartbeat() {
+  if (isNextBuild) return
   if (globalForPrisma.heartbeatTimer) return
   globalForPrisma.heartbeatTimer = setInterval(async () => {
     try {
