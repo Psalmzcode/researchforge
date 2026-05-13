@@ -25,6 +25,9 @@ export default function NewOrderPage() {
     projectId: '',
   })
 
+  const titleLen = form.title.trim().length
+  const descLen = form.description.trim().length
+
   const inp = "w-full rounded-xl px-4 py-3 text-sm outline-none border transition-all focus:border-[var(--accent)]"
   const inpStyle = { background: 'rgba(255,255,255,.05)', borderColor: 'var(--card-border)', color: 'var(--text)' }
 
@@ -57,6 +60,22 @@ export default function NewOrderPage() {
   }
 
   async function submit() {
+    if (titleLen < 3) {
+      toast.error('Project title must be at least 3 characters.')
+      setStep(1)
+      return
+    }
+    if (!form.service) {
+      toast.error('Please choose a service type.')
+      setStep(1)
+      return
+    }
+    if (descLen < 20) {
+      toast.error('Project description must be at least 20 characters. Add more detail on step 2.')
+      setStep(2)
+      return
+    }
+
     setLoading(true)
     try {
       const uploads = briefFiles.length > 0 ? await uploadBriefs() : []
@@ -66,6 +85,8 @@ export default function NewOrderPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          title: form.title.trim(),
+          description: form.description.trim(),
           projectId: form.projectId || undefined,
           budget: form.budget ? parseFloat(form.budget) : undefined,
           briefFiles: uploads,
@@ -169,9 +190,9 @@ export default function NewOrderPage() {
                 <input type="number" className={inp} style={inpStyle} placeholder="e.g. 500000" value={form.budget} onChange={e => set('budget', e.target.value)}/>
               </div>
             </div>
-            <button onClick={() => { if (form.title && form.service) setStep(2) }}
+            <button onClick={() => { if (titleLen >= 3 && form.service) setStep(2) }}
               className="w-full py-3 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 disabled:opacity-50"
-              style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }} disabled={!form.title || !form.service}>
+              style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }} disabled={titleLen < 3 || !form.service}>
               Next: Add Brief →
             </button>
           </>
@@ -188,6 +209,9 @@ export default function NewOrderPage() {
                 <textarea rows={6} className={`${inp} resize-y`} style={inpStyle}
                   placeholder="Describe your project in detail:&#10;• What is the objective?&#10;• Who is the target audience?&#10;• What geography / scope?&#10;• What output do you expect?&#10;• Any specific methodology preferences?"
                   value={form.description} onChange={e => set('description', e.target.value)} required/>
+                <p className="text-[11px]" style={{ color: descLen > 0 && descLen < 20 ? '#e24b4a' : 'var(--muted)' }}>
+                  {descLen}/20 characters minimum (leading/trailing spaces don&apos;t count)
+                </p>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold tracking-wide" style={{ color: 'var(--muted)' }}>Additional Notes</label>
@@ -225,9 +249,9 @@ export default function NewOrderPage() {
             </div>
             <div className="flex gap-3">
               <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-full font-bold text-sm border transition-all" style={{ borderColor: 'var(--card-border)', color: 'var(--muted)' }}>← Back</button>
-              <button onClick={() => { if (form.description) setStep(3) }}
+              <button type="button" onClick={() => setStep(3)}
                 className="flex-1 py-3 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5"
-                style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }} disabled={!form.description}>
+                style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }} disabled={descLen < 20}>
                 Next: Delivery →
               </button>
             </div>

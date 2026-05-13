@@ -32,9 +32,9 @@ export async function GET(req: NextRequest) {
 }
 
 const schema = z.object({
-  title: z.string().min(3),
-  description: z.string().min(20),
-  service: z.enum(['RESEARCH','DIGITAL_SURVEY','SUSTAINABILITY','ADVISORY']),
+  title: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().min(3, 'Project title must be at least 3 characters.')),
+  description: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().min(20, 'Project description must be at least 20 characters.')),
+  service: z.enum(['RESEARCH', 'DIGITAL_SURVEY', 'SUSTAINABILITY', 'ADVISORY']),
   deliveryMethod: z.enum(['DOWNLOAD','EMAIL','BOTH']).default('BOTH'),
   deliveryEmail: z.string().email().optional().or(z.literal('')),
   deadline: z.string().optional(),
@@ -54,7 +54,12 @@ export async function POST(req: NextRequest) {
   if (!['CLIENT','ADMIN'].includes(user.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const body = await req.json()
-  const data = schema.parse(body)
+  const parsed = schema.safeParse(body)
+  if (!parsed.success) {
+    const msg = parsed.error.issues[0]?.message || 'Invalid order data'
+    return NextResponse.json({ error: msg }, { status: 400 })
+  }
+  const data = parsed.data
 
   const order = await db.order.create({
     data: {
