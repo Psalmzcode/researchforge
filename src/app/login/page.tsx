@@ -86,13 +86,6 @@ export default function LoginPage() {
               {loading ? 'Signing in…' : 'Sign In →'}
             </button>
           </form>
-          <div className="mt-6 p-4 rounded-xl text-[.78rem] leading-6" style={{background:'rgba(0,198,162,.05)',color:'var(--muted)'}}>
-            <strong style={{ color: 'var(--text)' }}>Test accounts:</strong><br/>
-            researchforgeconsulting@gmail.com / Consultus2026<br/>
-            aisha@unicef.org / client123<br/>
-            tunde@researchforge.com / research123<br/>
-            ngozi@researchforge.com / finance123
-          </div>
         </div>
         <p className="text-center mt-6 text-[.83rem]" style={{color:'var(--muted)'}}>
           New here?{' '}
