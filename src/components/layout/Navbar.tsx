@@ -31,22 +31,26 @@ export function Navbar() {
     <>
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-8"
-          style={{ background: 'var(--nav-drawer-bg)' }}>
-          {navLinks.map(l => (
-            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
-              className="text-2xl font-semibold transition-colors hover:text-[var(--accent)]"
-              style={{ color: 'var(--text)' }}>{l.label}</a>
-          ))}
+        <div
+          className="fixed inset-0 z-[999] flex flex-col items-stretch justify-start gap-8 px-[6%] pt-24 pb-10 md:pt-28 overflow-y-auto"
+          style={{ background: 'var(--nav-drawer-bg)' }}
+        >
+          <nav className="flex w-full max-w-md flex-col items-start gap-3 md:gap-4" aria-label="Sections">
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
+                className="block w-full text-left text-2xl font-semibold transition-colors hover:text-[var(--accent)]"
+                style={{ color: 'var(--text)' }}>{l.label}</a>
+            ))}
+          </nav>
           {authed ? (
             <Link href={getDashboardPath((user as { role?: string }).role ?? 'CLIENT')}
-              className="text-2xl font-semibold" style={{ color: 'var(--accent)' }}
+              className="block w-full max-w-md text-left text-2xl font-semibold" style={{ color: 'var(--accent)' }}
               onClick={() => setMenuOpen(false)}>Dashboard</Link>
           ) : (
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex w-full max-w-md flex-col items-start gap-4">
               <Link
                 href="/login"
-                className="text-2xl font-semibold border-b-2 border-transparent hover:border-[var(--accent)] pb-0.5 transition-colors"
+                className="block w-full text-left text-2xl font-semibold border-b-2 border-transparent hover:border-[var(--accent)] pb-0.5 transition-colors"
                 style={{ color: 'var(--text)' }}
                 onClick={() => setMenuOpen(false)}
               >
@@ -54,7 +58,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/signup"
-                className="px-6 py-2 rounded-full font-bold text-lg"
+                className="inline-flex self-start px-6 py-2 rounded-full font-bold text-lg"
                 style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
                 onClick={() => setMenuOpen(false)}
               >

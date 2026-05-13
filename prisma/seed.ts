@@ -35,7 +35,13 @@ async function main() {
 
   const client = await prisma.user.upsert({
     where: { email: 'aisha@unicef.org' },
-    update: { emailVerified: verified },
+    update: {
+      password: clientPw,
+      emailVerified: verified,
+      role: Role.CLIENT,
+      name: 'Aisha Musa',
+      organization: 'UNICEF NG',
+    },
     create: {
       name: 'Aisha Musa',
       email: 'aisha@unicef.org',
@@ -48,7 +54,13 @@ async function main() {
 
   const researcher = await prisma.user.upsert({
     where: { email: 'tunde@researchforge.com' },
-    update: { emailVerified: verified },
+    update: {
+      password: researchPw,
+      emailVerified: verified,
+      role: Role.RESEARCHER,
+      name: 'Tunde Adeyemi',
+      organization: 'ResearchForge',
+    },
     create: {
       name: 'Tunde Adeyemi',
       email: 'tunde@researchforge.com',
@@ -61,7 +73,13 @@ async function main() {
 
   const finance = await prisma.user.upsert({
     where: { email: 'ngozi@researchforge.com' },
-    update: { emailVerified: verified },
+    update: {
+      password: financePw,
+      emailVerified: verified,
+      role: Role.FINANCE,
+      name: 'Ngozi Eze',
+      organization: 'ResearchForge',
+    },
     create: {
       name: 'Ngozi Eze',
       email: 'ngozi@researchforge.com',

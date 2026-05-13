@@ -5,11 +5,32 @@ const globalForPrisma = globalThis as unknown as {
   heartbeatTimer: ReturnType<typeof setInterval> | undefined
 }
 
+/** Cold or distant Postgres (e.g. Neon) can take >15s to connect; Prisma's default pool timeout then fails login. */
+function databaseUrlWithTimeouts(raw: string | undefined): string | undefined {
+  if (!raw?.trim()) return raw
+  const minPoolSeconds = 60
+  const minConnectSeconds = 60
+  try {
+    const u = new URL(raw)
+    const pool = Number(u.searchParams.get('pool_timeout'))
+    if (!u.searchParams.has('pool_timeout') || Number.isFinite(pool) === false || pool < minPoolSeconds) {
+      u.searchParams.set('pool_timeout', String(minPoolSeconds))
+    }
+    const connect = Number(u.searchParams.get('connect_timeout'))
+    if (!u.searchParams.has('connect_timeout') || Number.isFinite(connect) === false || connect < minConnectSeconds) {
+      u.searchParams.set('connect_timeout', String(minConnectSeconds))
+    }
+    return u.toString()
+  } catch {
+    return raw
+  }
+}
+
 export const db =
   globalForPrisma.prisma ||
   new PrismaClient({
     log: ['error'],
-    datasourceUrl: process.env.DATABASE_URL,
+    datasourceUrl: databaseUrlWithTimeouts(process.env.DATABASE_URL),
   })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
