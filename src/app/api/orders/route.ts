@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { z } from 'zod'
 import { sendOrderConfirmation, sendNewOrderToAdmins } from '@/lib/email'
 import { notifyAdmins } from '@/lib/notifications'
+import { parseJsonBody } from '@/lib/api-error'
 
 function orderNum() { return `ORD-${Date.now().toString().slice(-6)}` }
 
@@ -54,21 +55,24 @@ export async function POST(req: NextRequest) {
   if (!['CLIENT','ADMIN'].includes(user.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const body = await req.json()
-  const parsed = schema.safeParse(body)
-  if (!parsed.success) {
-    const msg = parsed.error.issues[0]?.message || 'Invalid order data'
-    return NextResponse.json({ error: msg }, { status: 400 })
-  }
+  const parsed = parseJsonBody(schema, body)
+  if (!parsed.ok) return parsed.response
   const data = parsed.data
 
   const order = await db.order.create({
     data: {
       orderNumber: orderNum(),
       clientId: user.id,
-      ...data,
-      projectId: data.projectId || undefined,
+      title: data.title,
+      description: data.description,
+      service: data.service,
+      deliveryMethod: data.deliveryMethod,
+      deliveryEmail: data.deliveryEmail?.trim() || undefined,
       deadline: data.deadline ? new Date(data.deadline) : undefined,
-      deliveryEmail: data.deliveryEmail || undefined,
+      budget: data.budget ?? undefined,
+      priority: data.priority,
+      notes: data.notes?.trim() || undefined,
+      ...(data.projectId ? { projectId: data.projectId } : {}),
     },
     include: { client: true },
   })

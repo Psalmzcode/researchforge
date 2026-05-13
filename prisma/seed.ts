@@ -105,16 +105,52 @@ async function main() {
     },
   })
 
-  await prisma.assignment.upsert({
-    where: { id: 'seed-assign-1' },
-    update: {},
-    create: { id: 'seed-assign-1', projectId: project.id, userId: researcher.id, role: 'lead', task: 'Household survey Zone A', target: '200 responses', progress: 65 },
+  const seedQuote = await prisma.quote.upsert({
+    where: { id: 'seed-quote-1' },
+    update: {
+      approved: true,
+      paymentType: 'INSTALLMENT',
+      amount: 900000,
+    },
+    create: {
+      id: 'seed-quote-1',
+      projectId: project.id,
+      amount: 900000,
+      description: 'Seeded quote for local demos',
+      approved: true,
+      approvedAt: new Date(),
+      paymentType: 'INSTALLMENT',
+    },
   })
 
   await prisma.invoice.upsert({
     where: { number: 'INV-0041' },
+    update: {
+      quoteId: seedQuote.id,
+      projectId: project.id,
+      clientId: client.id,
+      amount: 450000,
+      amountPaid: 450000,
+      paymentType: 'INSTALLMENT',
+      status: 'SENT',
+    },
+    create: {
+      number: 'INV-0041',
+      projectId: project.id,
+      clientId: client.id,
+      quoteId: seedQuote.id,
+      amount: 450000,
+      amountPaid: 450000,
+      status: 'SENT',
+      paymentType: 'INSTALLMENT',
+      dueDate: new Date('2025-06-15'),
+    },
+  })
+
+  await prisma.assignment.upsert({
+    where: { id: 'seed-assign-1' },
     update: {},
-    create: { number: 'INV-0041', projectId: project.id, clientId: client.id, amount: 900000, amountPaid: 450000, status: 'SENT', paymentType: 'INSTALLMENT', dueDate: new Date('2025-06-15') },
+    create: { id: 'seed-assign-1', projectId: project.id, userId: researcher.id, role: 'lead', task: 'Household survey Zone A', target: '200 responses', progress: 65 },
   })
 
   console.log('Seed complete. Test accounts:')
@@ -131,7 +167,8 @@ main().catch(console.error).finally(() => prisma.$disconnect())
 async function seedOrder() {
   const client = await prisma.user.findUnique({ where: { email: 'aisha@unicef.org' } })
   const researcher = await prisma.user.findUnique({ where: { email: 'tunde@researchforge.com' } })
-  if (!client || !researcher) return
+  const project = await prisma.project.findUnique({ where: { id: 'seed-project-1' } })
+  if (!client || !researcher || !project) return
 
   const existing = await prisma.order.findFirst({ where: { orderNumber: 'ORD-000001' } })
   if (existing) return
@@ -140,6 +177,7 @@ async function seedOrder() {
     data: {
       orderNumber: 'ORD-000001',
       clientId: client.id,
+      projectId: project.id,
       title: 'Household Survey — Kano State Zone A & B',
       description: 'We need a comprehensive household survey across Zone A and B of Kano State.\n\nObjective: Understand household income patterns, access to clean water, and sanitation infrastructure.\n\nTarget: 400 households total (200 per zone)\nMethodology: In-person structured interviews with digital capture\nTimeline: 3 weeks from start date\nExpected output: Final report with data tables, charts, and executive summary',
       service: 'DIGITAL_SURVEY',

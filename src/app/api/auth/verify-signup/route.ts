@@ -3,17 +3,20 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { Role } from '@prisma/client'
 import { z } from 'zod'
+import { parseJsonBody } from '@/lib/api-error'
 
 const MAX_ATTEMPTS = 8
 
 const schema = z.object({
-  email: z.string().email().transform(s => s.trim().toLowerCase()),
+  email: z.preprocess((v) => (typeof v === 'string' ? v.trim().toLowerCase() : v), z.string().email()),
   code: z.string().regex(/^\d{6}$/, 'Enter the 6-digit code from your email'),
 })
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, code } = schema.parse(await req.json())
+    const parsed = parseJsonBody(schema, await req.json())
+    if (!parsed.ok) return parsed.response
+    const { email, code } = parsed.data
 
     const pending = await db.signupPending.findUnique({ where: { email } })
     if (!pending) {
@@ -57,10 +60,7 @@ export async function POST(req: NextRequest) {
     ])
 
     return NextResponse.json({ ok: true, message: 'Email verified. You can sign in.' })
-  } catch (e: any) {
-    if (e?.name === 'ZodError') {
-      return NextResponse.json({ error: e.errors?.[0]?.message || 'Invalid input' }, { status: 400 })
-    }
+  } catch {
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
   }
 }

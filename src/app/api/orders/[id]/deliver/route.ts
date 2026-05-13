@@ -17,6 +17,18 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const order = await db.order.findUnique({ where: { id: params.id }, include: { client: true } })
   if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
 
+  if (user.role === 'RESEARCHER') {
+    if (order.assignedTo !== user.id) {
+      return NextResponse.json({ error: 'You are not assigned to this order.' }, { status: 403 })
+    }
+    if (order.status !== 'IN_PROGRESS') {
+      return NextResponse.json(
+        { error: 'Deliverables can only be uploaded while the order is in progress (after admin assignment).' },
+        { status: 400 },
+      )
+    }
+  }
+
   const saved: { name: string; url: string }[] = []
 
   for (const file of files) {

@@ -19,7 +19,7 @@ export default async function ResearcherOrderDetailPage({ params }: { params: { 
       client: { select:{ name:true,organization:true } },
       briefFiles: true,
       deliverables: true,
-      messages: { where:{ isInternal:false }, include:{ user:{ select:{ name:true,role:true } } }, orderBy:{ createdAt:'asc' } },
+      messages: { where:{ isInternal:false, deletedAt: null }, include:{ user:{ select:{ name:true,role:true } } }, orderBy:{ createdAt:'asc' } },
       timeline: { orderBy:{ createdAt:'asc' } },
     },
   })
@@ -68,7 +68,7 @@ export default async function ResearcherOrderDetailPage({ params }: { params: { 
               </div>
             </div>
           )}
-          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="RESEARCHER"/>
+          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="RESEARCHER" currentUserId={user.id}/>
         </div>
         <div className="space-y-5">
           <DeliverWork orderId={order.id}/>

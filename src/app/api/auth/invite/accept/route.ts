@@ -3,15 +3,18 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { hashInviteToken } from '@/lib/verification-tokens'
 import { z } from 'zod'
+import { parseJsonBody } from '@/lib/api-error'
 
 const schema = z.object({
   token: z.string().min(64, 'Invalid invitation link'),
-  password: z.string().min(8),
+  password: z.string().min(8, 'Password must be at least 8 characters.'),
 })
 
 export async function POST(req: NextRequest) {
   try {
-    const { token, password } = schema.parse(await req.json())
+    const parsed = parseJsonBody(schema, await req.json())
+    if (!parsed.ok) return parsed.response
+    const { token, password } = parsed.data
     const tokenHash = hashInviteToken(token.trim())
 
     const invite = await db.staffInvite.findUnique({ where: { tokenHash } })
@@ -47,10 +50,7 @@ export async function POST(req: NextRequest) {
     ])
 
     return NextResponse.json({ ok: true, message: 'Account activated. You can sign in.' })
-  } catch (e: any) {
-    if (e?.name === 'ZodError') {
-      return NextResponse.json({ error: e.errors?.[0]?.message || 'Invalid input' }, { status: 400 })
-    }
+  } catch {
     return NextResponse.json({ error: 'Could not complete invitation' }, { status: 500 })
   }
 }

@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { z } from 'zod'
+import { parseJsonBody } from '@/lib/api-error'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+const bodySchema = z.object({
+  allowWatermarkedDeliverableDownload: z.boolean({
+    invalid_type_error: 'allowWatermarkedDeliverableDownload must be true or false.',
+  }),
+})
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await auth()
@@ -12,7 +19,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const user = session.user as any
   if (user.role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const body = z.object({ allowWatermarkedDeliverableDownload: z.boolean() }).parse(await req.json())
+  const parsed = parseJsonBody(bodySchema, await req.json())
+  if (!parsed.ok) return parsed.response
+  const body = parsed.data
 
   const client = await db.user.findFirst({
     where: { id: params.id, role: 'CLIENT' },

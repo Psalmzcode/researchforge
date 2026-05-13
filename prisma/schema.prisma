@@ -334,14 +334,17 @@ model Deliverable {
 }
 
 model OrderMessage {
-  id        String   @id @default(cuid())
-  orderId   String
-  userId    String
-  message   String   @db.Text
-  isInternal Boolean @default(false)
-  createdAt DateTime @default(now())
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id])
+  id         String    @id @default(cuid())
+  orderId    String
+  userId     String
+  message    String    @db.Text
+  isInternal Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  editedAt   DateTime?
+  deletedAt  DateTime?
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id])
 }
 
 model OrderTimeline {

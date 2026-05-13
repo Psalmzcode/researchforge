@@ -4,19 +4,22 @@ import { db } from '@/lib/db'
 import { sendSignupOtpEmail } from '@/lib/email'
 import { generateSignupOtp } from '@/lib/verification-tokens'
 import { z } from 'zod'
+import { parseJsonBody } from '@/lib/api-error'
 
 const OTP_MINUTES = 15
 const OTP_ROUNDS = 8
 const COOLDOWN_MS = 60_000
 
 const schema = z.object({
-  email: z.string().email().transform(s => s.trim().toLowerCase()),
-  password: z.string().min(8),
+  email: z.preprocess((v) => (typeof v === 'string' ? v.trim().toLowerCase() : v), z.string().email()),
+  password: z.string().min(8, 'Password must be at least 8 characters.'),
 })
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = schema.parse(await req.json())
+    const parsed = parseJsonBody(schema, await req.json())
+    if (!parsed.ok) return parsed.response
+    const { email, password } = parsed.data
 
     const pending = await db.signupPending.findUnique({ where: { email } })
     if (!pending) {
@@ -51,10 +54,7 @@ export async function POST(req: NextRequest) {
     await sendSignupOtpEmail(email, otp, OTP_MINUTES)
 
     return NextResponse.json({ ok: true, message: 'A new code was sent to your email.' })
-  } catch (e: any) {
-    if (e?.name === 'ZodError') {
-      return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
-    }
+  } catch {
     return NextResponse.json({ error: 'Could not resend code' }, { status: 500 })
   }
 }

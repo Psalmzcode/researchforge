@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Spinner } from '@/components/ui/Spinner'
@@ -17,7 +17,15 @@ const statusLabel: Record<string, string> = {
   CANCELLED: 'Cancel Order',
 }
 
-export function AdminOrderActions({ order, researchers }: { order: any; researchers: any[] }) {
+export function AdminOrderActions({
+  order,
+  researchers,
+  clientProjects,
+}: {
+  order: any
+  researchers: any[]
+  clientProjects: { id: string; title: string }[]
+}) {
   const router = useRouter()
   const [status, setStatus] = useState('')
   const [note, setNote] = useState('')
@@ -25,6 +33,33 @@ export function AdminOrderActions({ order, researchers }: { order: any; research
   const [loading, setLoading] = useState(false)
   const [assigning, setAssigning] = useState(false)
   const [approving, setApproving] = useState(false)
+  const [linkProjectId, setLinkProjectId] = useState(order.projectId || '')
+  const [linkSaving, setLinkSaving] = useState(false)
+
+  useEffect(() => {
+    setLinkProjectId(order.projectId || '')
+  }, [order.projectId])
+
+  async function saveLinkedProject() {
+    setLinkSaving(true)
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: linkProjectId || null }),
+      })
+      if (res.ok) {
+        toast.success('Linked project updated.')
+        router.refresh()
+      } else {
+        toast.error(await getJsonError(res))
+      }
+    } catch {
+      toast.error('Could not update linked project.')
+    } finally {
+      setLinkSaving(false)
+    }
+  }
 
   async function updateStatus() {
     if (!status) return
@@ -93,6 +128,44 @@ export function AdminOrderActions({ order, researchers }: { order: any; research
   return (
     <div className="rounded-2xl border p-5 space-y-5" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
       <h2 className="font-semibold text-sm">Admin Actions</h2>
+
+      <div className="space-y-2 rounded-xl border p-4" style={{ borderColor: 'var(--card-border)', background: 'rgba(255,255,255,.02)' }}>
+        <label className="text-xs font-semibold tracking-wide" style={{ color: 'var(--muted)' }}>
+          Linked project (quote & payment gate)
+        </label>
+        <select
+          className={inp}
+          style={inpS}
+          value={linkProjectId}
+          onChange={e => setLinkProjectId(e.target.value)}
+        >
+          <option value="">None — cannot assign until linked</option>
+          {clientProjects.map(p => (
+            <option key={p.id} value={p.id}>
+              {p.title}
+            </option>
+          ))}
+        </select>
+        <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted)' }}>
+          Assignment and &quot;In progress&quot; require this client&apos;s project to have an <strong>approved quote</strong> and a <strong>fully paid first invoice</strong>. Negotiation can happen in messages; the quote row remains the billing source of truth.
+        </p>
+        <button
+          type="button"
+          onClick={saveLinkedProject}
+          disabled={linkSaving || (linkProjectId || '') === (order.projectId || '')}
+          className="inline-flex w-full items-center justify-center gap-2 py-2 rounded-full text-xs font-bold disabled:opacity-50 transition-all"
+          style={{ background: 'rgba(255,255,255,.08)', color: 'var(--text)' }}
+        >
+          {linkSaving ? (
+            <>
+              <Spinner size="sm" label="Saving link" />
+              <span>Saving…</span>
+            </>
+          ) : (
+            'Save project link'
+          )}
+        </button>
+      </div>
 
       {order.status === 'PENDING_REVIEW' && (
         <div className="space-y-3 p-4 rounded-xl border-2" style={{ borderColor: '#f0a500', background: 'rgba(240,165,0,.06)' }}>
@@ -172,6 +245,9 @@ export function AdminOrderActions({ order, researchers }: { order: any; research
             '👤 Assign'
           )}
         </button>
+        <p className="text-[11px] leading-relaxed pt-1" style={{ color: 'var(--muted)' }}>
+          Assigning sets the order to <strong>In progress</strong> and checks the project&apos;s initial invoice is paid.
+        </p>
       </div>
 
       <div className="space-y-2 border-t pt-4" style={{ borderColor: 'var(--card-border)' }}>

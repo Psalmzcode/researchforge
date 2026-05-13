@@ -168,7 +168,9 @@ export default function NewOrderPage() {
                     <option key={p.id} value={p.id}>{p.title}</option>
                   ))}
                 </select>
-                <p className="text-[11px]" style={{ color: 'var(--muted)' }}>Required for <strong>installment payment gating</strong>: orders tied to a project use that project&apos;s installment invoices to control when final deliverables are released.</p>
+                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted)' }}>
+                  Choose the project this brief belongs to. We use it to confirm your <strong>approved quote and paid initial invoice</strong> before work can move to in progress, and for <strong>installment</strong> rules on final deliverables. Standalone orders stay blocked for assignment until an admin links a project.
+                </p>
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-1.5">

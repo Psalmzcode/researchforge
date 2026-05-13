@@ -73,7 +73,7 @@ export default async function ClientOrderDetailPage({ params }: { params: { id: 
       assignee: { select: { name: true } },
       briefFiles: true,
       deliverables: true,
-      messages: { where: { isInternal: false }, include: { user: { select: { name: true, role: true } } }, orderBy: { createdAt: 'asc' } },
+      messages: { where: { isInternal: false, deletedAt: null }, include: { user: { select: { name: true, role: true } } }, orderBy: { createdAt: 'asc' } },
       timeline: { orderBy: { createdAt: 'asc' } },
     },
   })
@@ -293,7 +293,7 @@ export default async function ClientOrderDetailPage({ params }: { params: { id: 
             </div>
           </div>
           {/* Messages */}
-          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="CLIENT"/>
+          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="CLIENT" currentUserId={user.id}/>
         </div>
       </div>
     </div>

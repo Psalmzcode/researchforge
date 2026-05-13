@@ -50,7 +50,7 @@ Visit: http://localhost:3000
 | GET | `/api/orders` | All | List orders (filtered by role) |
 | POST | `/api/orders` | Client, Admin | Submit new order with brief |
 | GET | `/api/orders/[id]` | Owner, Admin, Researcher | Get single order |
-| PATCH | `/api/orders/[id]` | Admin | Update order fields |
+| PATCH | `/api/orders/[id]` | Admin | Set `projectId` (client must own project); send `null` to clear |
 | POST | `/api/orders/[id]/status` | Admin, Researcher | Change order status + notify client |
 | POST | `/api/orders/[id]/assign` | Admin | Assign researcher to order |
 | POST | `/api/orders/[id]/briefs` | Client | Attach uploaded brief files |
@@ -74,7 +74,7 @@ Visit: http://localhost:3000
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
 | POST | `/api/quotes` | Admin | Create quote for a project |
-| PATCH | `/api/quotes` | Client | Approve quote → auto-creates invoice |
+| PATCH | `/api/quotes` | Admin | Approve quote → creates first invoice (idempotent) |
 
 ### Invoices & Payments
 | Method | Endpoint | Access | Description |
@@ -133,11 +133,13 @@ Visit: http://localhost:3000
 ## Order Workflow
 
 ```
-Client submits order (+ uploads brief docs)
+Client submits order (+ uploads brief docs), ideally linked to a project
          ↓
 Admin receives notification + email
          ↓
-Admin reviews → assigns to Researcher → status: IN_PROGRESS
+Admin links order to project (if needed), ensures quote approved + client paid first invoice
+         ↓
+Admin assigns researcher → status: IN_PROGRESS (blocked until initial invoice is paid)
          ↓  
 Client notified by email + dashboard notification
          ↓

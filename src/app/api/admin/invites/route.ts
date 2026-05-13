@@ -5,13 +5,14 @@ import { sendStaffInviteEmail } from '@/lib/email'
 import { generateInviteToken, hashInviteToken } from '@/lib/verification-tokens'
 import { z } from 'zod'
 import { Role } from '@prisma/client'
+import { parseJsonBody } from '@/lib/api-error'
 
 export const dynamic = 'force-dynamic'
 
 const INVITE_HOURS = 48
 
 const schema = z.object({
-  email: z.string().email().transform(s => s.trim().toLowerCase()),
+  email: z.preprocess((v) => (typeof v === 'string' ? v.trim().toLowerCase() : v), z.string().email('Enter a valid work email.')),
   name: z.string().trim().max(120).optional().nullable(),
   organization: z.string().trim().max(200).optional().nullable(),
   role: z.enum(['RESEARCHER', 'FINANCE', 'ADMIN']),
@@ -26,7 +27,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const data = schema.parse(await req.json())
+    const parsed = parseJsonBody(schema, await req.json())
+    if (!parsed.ok) return parsed.response
+    const data = parsed.data
 
     const existing = await db.user.findUnique({ where: { email: data.email } })
     if (existing) {
@@ -60,10 +63,7 @@ export async function POST(req: NextRequest) {
     await sendStaffInviteEmail(data.email, data.name || null, roleLabel, inviteUrl, INVITE_HOURS)
 
     return NextResponse.json({ ok: true, message: 'Invitation sent.' })
-  } catch (e: any) {
-    if (e?.name === 'ZodError') {
-      return NextResponse.json({ error: e.errors?.[0]?.message || 'Invalid input' }, { status: 400 })
-    }
+  } catch {
     return NextResponse.json({ error: 'Could not create invite' }, { status: 500 })
   }
 }

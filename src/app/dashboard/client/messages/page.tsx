@@ -13,12 +13,12 @@ export default async function ClientMessagesPage() {
     where: { clientId: user.id },
     include: {
       messages: {
-        where: { isInternal: false },
+        where: { isInternal: false, deletedAt: null },
         include: { user: { select: { name: true, role: true } } },
         orderBy: { createdAt: 'desc' },
         take: 1,
       },
-      _count: { select: { messages: { where: { isInternal: false } } } },
+      _count: { select: { messages: { where: { isInternal: false, deletedAt: null } } } },
     },
     orderBy: { updatedAt: 'desc' },
   })

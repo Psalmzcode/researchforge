@@ -13,22 +13,28 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
   const session = await auth()
   if (!session || (session.user as any).role !== 'ADMIN') redirect('/login')
 
-  const [order, researchers] = await Promise.all([
-    db.order.findUnique({
-      where: { id: params.id },
-      include: {
-        client: { select:{ name:true,email:true,organization:true } },
-        assignee: { select:{ name:true,email:true } },
-        briefFiles: true,
-        deliverables: true,
-        messages: { include:{ user:{ select:{ name:true,role:true } } }, orderBy:{ createdAt:'asc' } },
-        timeline: { orderBy:{ createdAt:'asc' } },
-      },
-    }),
-    db.user.findMany({ where:{ role:'RESEARCHER' }, select:{ id:true,name:true,email:true } }),
-  ])
+  const order = await db.order.findUnique({
+    where: { id: params.id },
+    include: {
+      client: { select:{ name:true,email:true,organization:true } },
+      assignee: { select:{ name:true,email:true } },
+      briefFiles: true,
+      deliverables: true,
+      messages: { include:{ user:{ select:{ name:true,role:true } } }, where: { deletedAt: null }, orderBy:{ createdAt:'asc' } },
+      timeline: { orderBy:{ createdAt:'asc' } },
+    },
+  })
 
   if (!order) notFound()
+
+  const [researchers, clientProjects] = await Promise.all([
+    db.user.findMany({ where:{ role:'RESEARCHER' }, select:{ id:true,name:true,email:true } }),
+    db.project.findMany({
+      where: { clientId: order.clientId },
+      select: { id: true, title: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ])
 
   const stepLabel: Record<string,string> = { SUBMITTED:'Submitted',REVIEWING:'Under Review',IN_PROGRESS:'In Progress',NEEDS_CLARIFICATION:'Needs Clarification',PENDING_REVIEW:'Pending Admin Review',AWAITING_CLIENT_PAYMENT:'Awaiting final payment (preview)',COMPLETED:'Work Complete',DELIVERED:'Delivered',CANCELLED:'Cancelled' }
 
@@ -99,13 +105,13 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             </div>
           )}
 
-          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="ADMIN"/>
+          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="ADMIN" currentUserId={(session.user as any).id}/>
         </div>
 
         {/* Right: actions */}
         <div className="space-y-5">
           {/* Status + Assign */}
-          <AdminOrderActions order={order as any} researchers={researchers}/>
+          <AdminOrderActions order={order as any} researchers={researchers} clientProjects={clientProjects}/>
 
           {/* Upload deliverable */}
           <DeliverWork orderId={order.id}/>
