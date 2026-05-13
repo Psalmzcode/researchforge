@@ -37,7 +37,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
             {[
               ['01 — Research','Research & Data Solutions','We design and execute research that informs decisions.',['Study design & methodology development','Data collection frameworks','Analysis, interpretation & reporting','Impact & policy research'],'"We turn questions into structured insights."'],
-              ['02 — Digital Intelligence','Digital Survey & Field Intelligence','Modern data collection systems built for scale, speed, and reliability.',['Digital survey tools (ODK, KoboToolbox)','Field data systems & workflows','Monitoring & evaluation tools','Real-time data tracking'],'"Smarter, faster, more reliable data collection."'],
+              ['02 — Digital Intelligence','Digital Survey & Field Intelligence','Modern data collection systems built for scale, speed, and reliability.',['Digital survey platforms & mobile data capture','Field data systems & workflows','Monitoring & evaluation tools','Real-time data tracking'],'"Smarter, faster, more reliable data collection."'],
               ['03 — Sustainability','Sustainability, Energy & Environmental Consulting','Domain expertise built for the long term.',['Energy systems analysis','Environmental impact assessments','Waste & circular economy studies','Sustainability strategy development'],'"Solutions that are effective and sustainable."'],
               ['04 — Advisory','Advisory & Strategic Consulting','High-level thinking when you need it most.',['Project design & structuring','Policy & program advisory','Organizational strategy support','Technical consulting for research projects'],'"Better decisions, with clarity and structure."'],
             ].map(([num,title,desc,items,value])=>(
@@ -79,7 +79,7 @@ export default function HomePage() {
           <div className="max-w-[740px] mx-auto text-left">
             {[['01','Understand the Problem','We start by deeply understanding your context, constraints, and goals — before recommending anything.'],
               ['02','Design a Structured Solution','Using the right frameworks and methodologies, we design a solution tailored to your specific challenge.'],
-              ['03','Implement With the Right Tools','We deploy proven digital and research tools — from ODK to advanced analytics — to bring the solution to life.'],
+              ['03','Implement With the Right Tools','We deploy proven digital and research tools — spanning collection, processing, and advanced analytics — to bring the solution to life.'],
               ['04','Analyze & Interpret Data','Raw data becomes structured intelligence through our rigorous analysis and interpretation process.'],
               ['05','Deliver Actionable Recommendations',"You receive clear, practical recommendations — not just reports — that your team can act on immediately."],
             ].map(([num,title,desc], i, arr)=>(

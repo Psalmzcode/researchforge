@@ -2,7 +2,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
+import { Spinner } from '@/components/ui/Spinner'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -23,14 +25,19 @@ export default function SignupPage() {
       const data = await res.json().catch(() => ({}))
       setLoading(false)
       if (!res.ok) {
-        setError(data.error || 'Could not start registration')
+        const msg = data.error || 'Could not start registration'
+        setError(msg)
+        toast.error(msg)
         return
       }
+      toast.success('Check your email for the 6-digit code.')
       const email = form.email.trim().toLowerCase()
       router.push(`/signup/verify?email=${encodeURIComponent(email)}`)
     } catch {
       setLoading(false)
-      setError('Something went wrong. Try again.')
+      const msg = 'Something went wrong. Try again.'
+      setError(msg)
+      toast.error(msg)
     }
   }
 
@@ -99,10 +106,17 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
               style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
             >
-              {loading ? 'Sending code…' : 'Continue to verification →'}
+              {loading ? (
+                <>
+                  <Spinner size="sm" label="Sending verification code" />
+                  <span>Sending code…</span>
+                </>
+              ) : (
+                'Continue to verification →'
+              )}
             </button>
           </form>
           <p className="text-center mt-6 text-[.83rem]" style={{ color: 'var(--muted)' }}>

@@ -1,8 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { signIn, getSession } from 'next-auth/react'
+import { toast } from 'sonner'
 import { getDashboardPath } from '@/lib/utils'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
+import { Spinner } from '@/components/ui/Spinner'
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email:'', password:'' })
@@ -28,9 +30,12 @@ export default function LoginPage() {
         redirect: false,
       })
       if (res?.error || !res?.ok) {
-        setError('Invalid email or password')
+        const msg = 'Invalid email or password'
+        setError(msg)
+        toast.error(msg)
         return
       }
+      toast.success('Signed in')
       // Sync client session cache (next-auth internal)
       const session = await getSession()
       const role = (session?.user as { role?: string } | undefined)?.role ?? 'CLIENT'
@@ -38,7 +43,9 @@ export default function LoginPage() {
       // Full navigation so server components (auth()) see the session cookie — router.push alone is flaky here
       window.location.assign(path)
     } catch {
-      setError('Something went wrong. Try again.')
+      const msg = 'Something went wrong. Try again.'
+      setError(msg)
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
@@ -81,9 +88,16 @@ export default function LoginPage() {
             </div>
             {error && <p className="text-[.83rem] text-red-400">{error}</p>}
             <button type="submit" disabled={loading}
-              className="w-full py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
               style={{background:'var(--accent)',color:'var(--text-on-accent)'}}>
-              {loading ? 'Signing in…' : 'Sign In →'}
+              {loading ? (
+                <>
+                  <Spinner size="sm" label="Signing in" />
+                  <span>Signing in…</span>
+                </>
+              ) : (
+                'Sign In →'
+              )}
             </button>
           </form>
         </div>

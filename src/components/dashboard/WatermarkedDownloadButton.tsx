@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { Spinner } from '@/components/ui/Spinner'
 
 export function WatermarkedDownloadButton({ deliverableId }: { deliverableId: string }) {
   const [loading, setLoading] = useState(false)
@@ -12,10 +13,17 @@ export function WatermarkedDownloadButton({ deliverableId }: { deliverableId: st
         setTimeout(() => setLoading(false), 2500)
       }}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 disabled:opacity-60 border"
+      className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 disabled:opacity-60 border"
       style={{ borderColor: 'var(--ghost-outline)', color: 'var(--text)' }}
     >
-      {loading ? '…' : '⬇ Preview (watermarked)'}
+      {loading ? (
+        <>
+          <Spinner size="sm" label="Preparing download" />
+          <span>Preparing…</span>
+        </>
+      ) : (
+        '⬇ Preview (watermarked)'
+      )}
     </button>
   )
 }

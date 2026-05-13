@@ -2,7 +2,9 @@
 import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
+import { Spinner } from '@/components/ui/Spinner'
 
 function SignupVerifyInner() {
   const router = useRouter()
@@ -37,13 +39,18 @@ function SignupVerifyInner() {
       const data = await res.json().catch(() => ({}))
       setLoading(false)
       if (!res.ok) {
-        setError(data.error || 'Verification failed')
+        const msg = data.error || 'Verification failed'
+        setError(msg)
+        toast.error(msg)
         return
       }
+      toast.success('Email verified. You can sign in.')
       router.push('/login?registered=1')
     } catch {
       setLoading(false)
-      setError('Something went wrong. Try again.')
+      const msg = 'Something went wrong. Try again.'
+      setError(msg)
+      toast.error(msg)
     }
   }
 
@@ -51,7 +58,9 @@ function SignupVerifyInner() {
     setError('')
     setInfo('')
     if (password.length < 8) {
-      setError('Enter the same password you used on the sign-up form (required to resend the code).')
+      const msg = 'Enter the same password you used on the sign-up form (required to resend the code).'
+      setError(msg)
+      toast.error(msg)
       return
     }
     setResendLoading(true)
@@ -64,13 +73,19 @@ function SignupVerifyInner() {
       const data = await res.json().catch(() => ({}))
       setResendLoading(false)
       if (!res.ok) {
-        setError(data.error || 'Could not resend code')
+        const msg = data.error || 'Could not resend code'
+        setError(msg)
+        toast.error(msg)
         return
       }
-      setInfo(data.message || 'A new code was sent.')
+      const m = data.message || 'A new code was sent.'
+      setInfo(m)
+      toast.success(m)
     } catch {
       setResendLoading(false)
-      setError('Something went wrong. Try again.')
+      const msg = 'Something went wrong. Try again.'
+      setError(msg)
+      toast.error(msg)
     }
   }
 
@@ -129,10 +144,17 @@ function SignupVerifyInner() {
             <button
               type="submit"
               disabled={loading || code.length !== 6}
-              className="w-full py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
               style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
             >
-              {loading ? 'Verifying…' : 'Verify and create account →'}
+              {loading ? (
+                <>
+                  <Spinner size="sm" label="Verifying code" />
+                  <span>Verifying…</span>
+                </>
+              ) : (
+                'Verify and create account →'
+              )}
             </button>
           </form>
           <div className="flex flex-col gap-4 mt-6 pt-6 border-t" style={{ borderColor: 'var(--card-border)' }}>
@@ -154,10 +176,17 @@ function SignupVerifyInner() {
               type="button"
               disabled={resendLoading}
               onClick={handleResend}
-              className="text-[.83rem] font-semibold text-left disabled:opacity-50"
+              className="inline-flex items-center gap-2 text-[.83rem] font-semibold text-left disabled:opacity-50"
               style={{ color: 'var(--accent)' }}
             >
-              {resendLoading ? 'Sending…' : 'Resend code'}
+              {resendLoading ? (
+                <>
+                  <Spinner size="sm" label="Resending code" />
+                  <span>Sending…</span>
+                </>
+              ) : (
+                'Resend code'
+              )}
             </button>
             <Link href="/signup" className="text-[.83rem]" style={{ color: 'var(--muted)' }}>
               ← Back to sign-up
@@ -184,8 +213,9 @@ export default function SignupVerifyPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--navy)', color: 'var(--muted)' }}>
-          Loading…
+        <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ background: 'var(--navy)', color: 'var(--muted)' }}>
+          <Spinner size="md" label="Loading" />
+          <span className="text-sm">Loading…</span>
         </div>
       }
     >

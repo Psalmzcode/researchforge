@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 interface Notif { id: string; title: string; message: string; type: string; read: boolean; link?: string; createdAt: string }
 
@@ -15,8 +16,16 @@ export function NotificationBell() {
   const unread = notifs.filter(n => !n.read).length
 
   async function markRead() {
-    await fetch('/api/notifications', { method: 'PATCH' })
-    setNotifs(n => n.map(x => ({ ...x, read: true })))
+    try {
+      const res = await fetch('/api/notifications', { method: 'PATCH' })
+      if (!res.ok) {
+        toast.error('Could not mark notifications as read.')
+        return
+      }
+      setNotifs(n => n.map(x => ({ ...x, read: true })))
+    } catch {
+      toast.error('Could not mark notifications as read.')
+    }
   }
 
   const typeColor: Record<string,string> = { success:'var(--accent)', warning:'#f0a500', error:'#e24b4a', info:'#378add' }

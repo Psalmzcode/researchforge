@@ -1,6 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/Spinner'
+import { getJsonError } from '@/lib/api-error'
 
 const services = [
   { value: 'RESEARCH', label: 'Research & Data Solutions' },
@@ -35,13 +38,19 @@ export default function NewOrderPage() {
   function set(k: string, v: string) { setForm(f => ({ ...f, [k]: v })) }
 
   async function uploadBriefs() {
-    const uploaded = []
+    const uploaded: { name: string; url: string; size: number; type: string }[] = []
     for (const file of briefFiles) {
       const fd = new FormData()
       fd.append('file', file)
       fd.append('folder', 'briefs')
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      if (res.ok) uploaded.push(await res.json())
+      if (res.ok) {
+        uploaded.push(await res.json())
+      } else {
+        const err = await getJsonError(res)
+        toast.error(`Upload failed (${file.name}): ${err}`)
+        throw new Error('upload')
+      }
     }
     setUploadedUrls(uploaded)
     return uploaded
@@ -50,7 +59,6 @@ export default function NewOrderPage() {
   async function submit() {
     setLoading(true)
     try {
-      // Upload brief files first
       const uploads = briefFiles.length > 0 ? await uploadBriefs() : []
 
       const res = await fetch('/api/orders', {
@@ -63,18 +71,30 @@ export default function NewOrderPage() {
           briefFiles: uploads,
         }),
       })
-      if (res.ok) {
-        const order = await res.json()
-        // If files uploaded, attach to order
-        if (uploads.length > 0) {
-          await fetch(`/api/orders/${order.id}/briefs`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ files: uploads }),
-          })
-        }
-        router.push('/dashboard/client/orders')
+      if (!res.ok) {
+        toast.error(await getJsonError(res))
+        return
       }
-    } finally { setLoading(false) }
+      const order = await res.json()
+      if (uploads.length > 0) {
+        const br = await fetch(`/api/orders/${order.id}/briefs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ files: uploads }),
+        })
+        if (!br.ok) {
+          toast.error(`Order created but briefs failed to attach: ${await getJsonError(br)}`)
+        }
+      }
+      toast.success('Order submitted. Our team will review it shortly.')
+      router.push('/dashboard/client/orders')
+    } catch (e) {
+      if (e instanceof Error && e.message !== 'upload') {
+        toast.error('Could not submit order. Try again.')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -245,9 +265,16 @@ export default function NewOrderPage() {
             <div className="flex gap-3">
               <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-full font-bold text-sm border transition-all" style={{ borderColor: 'var(--card-border)', color: 'var(--muted)' }}>← Back</button>
               <button onClick={submit} disabled={loading}
-                className="flex-1 py-3 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 disabled:opacity-70"
+                className="inline-flex flex-1 items-center justify-center gap-2 py-3 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 disabled:opacity-70"
                 style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}>
-                {loading ? 'Submitting…' : '✓ Submit Order'}
+                {loading ? (
+                  <>
+                    <Spinner size="sm" label="Submitting order" />
+                    <span>Submitting…</span>
+                  </>
+                ) : (
+                  '✓ Submit Order'
+                )}
               </button>
             </div>
           </>

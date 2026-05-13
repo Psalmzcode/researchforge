@@ -109,10 +109,10 @@ export function HeroCarousel() {
         />
       ))}
 
-      {/* Dark overlay for text readability */}
+      {/* Dark overlay for text readability — lower alpha = brighter hero */}
       <div
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(105deg, rgba(10,15,28,.88) 45%, rgba(10,15,28,.6) 100%)' }}
+        style={{ background: 'linear-gradient(105deg, rgba(10,15,28,.72) 45%, rgba(10,15,28,.42) 100%)' }}
       />
 
 
@@ -228,7 +228,7 @@ export function HeroCarousel() {
           {[
             ['Project Status', '🟢 Analysis Complete'],
             ['Data Accuracy', '98.4% Field Validation'],
-            ['Active Sectors', 'Energy · Environment · NGO'],
+            ['Active Sectors', 'Energy · Environment · Education · NGO'],
           ].map(([lbl, val], i) => (
             <div
               key={lbl}

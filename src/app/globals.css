@@ -56,3 +56,8 @@ body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--t
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
 .font-serif { font-family: 'Playfair Display', serif; }
+
+/* Above fixed navbar (z-[1000]) */
+[data-sonner-toaster] {
+  z-index: 1100 !important;
+}

@@ -2,7 +2,9 @@
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
+import { Spinner } from '@/components/ui/Spinner'
 
 function InviteAcceptInner() {
   const router = useRouter()
@@ -17,15 +19,21 @@ function InviteAcceptInner() {
     e.preventDefault()
     setError('')
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
+      const msg = 'Password must be at least 8 characters.'
+      setError(msg)
+      toast.error(msg)
       return
     }
     if (password !== confirm) {
-      setError('Passwords do not match.')
+      const msg = 'Passwords do not match.'
+      setError(msg)
+      toast.error(msg)
       return
     }
     if (!token || token.length < 64) {
-      setError('Invalid or missing invitation link. Open the link from your email.')
+      const msg = 'Invalid or missing invitation link. Open the link from your email.'
+      setError(msg)
+      toast.error(msg)
       return
     }
     setLoading(true)
@@ -38,13 +46,18 @@ function InviteAcceptInner() {
       const data = await res.json().catch(() => ({}))
       setLoading(false)
       if (!res.ok) {
-        setError(data.error || 'Could not activate account')
+        const msg = data.error || 'Could not activate account'
+        setError(msg)
+        toast.error(msg)
         return
       }
+      toast.success('Account activated. Sign in with your new password.')
       router.push('/login?invited=1')
     } catch {
       setLoading(false)
-      setError('Something went wrong. Try again.')
+      const msg = 'Something went wrong. Try again.'
+      setError(msg)
+      toast.error(msg)
     }
   }
 
@@ -97,10 +110,17 @@ function InviteAcceptInner() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
               style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
             >
-              {loading ? 'Saving…' : 'Activate account →'}
+              {loading ? (
+                <>
+                  <Spinner size="sm" label="Saving account" />
+                  <span>Saving…</span>
+                </>
+              ) : (
+                'Activate account →'
+              )}
             </button>
           </form>
         </div>
@@ -116,7 +136,14 @@ function InviteAcceptInner() {
 
 export default function InviteAcceptPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ color: 'var(--muted)' }}>Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex flex-col items-center justify-center gap-3" style={{ color: 'var(--muted)' }}>
+          <Spinner size="md" label="Loading invitation" />
+          <span className="text-sm">Loading…</span>
+        </div>
+      }
+    >
       <InviteAcceptInner />
     </Suspense>
   )

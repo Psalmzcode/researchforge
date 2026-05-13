@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/Spinner'
 
 export function AdminStaffInvite() {
   const router = useRouter()
@@ -8,12 +10,10 @@ export function AdminStaffInvite() {
   const [name, setName] = useState('')
   const [organization, setOrganization] = useState('')
   const [role, setRole] = useState<'RESEARCHER' | 'FINANCE' | 'ADMIN'>('RESEARCHER')
-  const [msg, setMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function sendInvite(e: React.FormEvent) {
     e.preventDefault()
-    setMsg(null)
     setLoading(true)
     try {
       const res = await fetch('/api/admin/invites', {
@@ -27,19 +27,19 @@ export function AdminStaffInvite() {
         }),
       })
       const data = await res.json().catch(() => ({}))
-      setLoading(false)
       if (!res.ok) {
-        setMsg({ type: 'err', text: data.error || 'Could not send invite' })
+        toast.error(typeof data.error === 'string' ? data.error : `Request failed (${res.status})`)
         return
       }
-      setMsg({ type: 'ok', text: data.message || 'Invitation sent. They will receive an email with a link to set their password.' })
+      toast.success(data.message || 'Invitation sent. They will receive an email to set their password.')
       setEmail('')
       setName('')
       setOrganization('')
       router.refresh()
     } catch {
+      toast.error('Network error — could not send invite.')
+    } finally {
       setLoading(false)
-      setMsg({ type: 'err', text: 'Network error' })
     }
   }
 
@@ -56,37 +56,47 @@ export function AdminStaffInvite() {
       </div>
       <form onSubmit={sendInvite} className="space-y-3">
         <div>
-          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>Work email *</label>
-          <input type="email" required className={`${inp} mt-1`} style={inpS} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@company.com" />
+          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>
+            Work email *
+          </label>
+          <input type="email" required className={`${inp} mt-1`} style={inpS} value={email} onChange={e => setEmail(e.target.value)} placeholder="name@company.com" />
         </div>
         <div>
-          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>Name</label>
-          <input type="text" className={`${inp} mt-1`} style={inpS} value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" />
+          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>
+            Name
+          </label>
+          <input type="text" className={`${inp} mt-1`} style={inpS} value={name} onChange={e => setName(e.target.value)} placeholder="Full name" />
         </div>
         <div>
-          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>Organization</label>
-          <input type="text" className={`${inp} mt-1`} style={inpS} value={organization} onChange={(e) => setOrganization(e.target.value)} placeholder="Optional" />
+          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>
+            Organization
+          </label>
+          <input type="text" className={`${inp} mt-1`} style={inpS} value={organization} onChange={e => setOrganization(e.target.value)} placeholder="Optional" />
         </div>
         <div>
-          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>Role *</label>
-          <select className={`${inp} mt-1`} style={inpS} value={role} onChange={(e) => setRole(e.target.value as typeof role)}>
+          <label className="text-xs font-semibold" style={{ color: 'var(--muted)' }}>
+            Role *
+          </label>
+          <select className={`${inp} mt-1`} style={inpS} value={role} onChange={e => setRole(e.target.value as typeof role)}>
             <option value="RESEARCHER">Researcher</option>
             <option value="FINANCE">Finance</option>
             <option value="ADMIN">Admin</option>
           </select>
         </div>
-        {msg && (
-          <p className={`text-xs p-2 rounded-lg ${msg.type === 'ok' ? '' : ''}`} style={{ background: msg.type === 'ok' ? 'rgba(0,198,162,.1)' : 'rgba(226,75,74,.1)', color: msg.type === 'ok' ? 'var(--accent)' : '#e24b4a' }}>
-            {msg.text}
-          </p>
-        )}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 rounded-full text-xs font-bold disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold disabled:opacity-50"
           style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
         >
-          {loading ? 'Sending…' : 'Send invitation email'}
+          {loading ? (
+            <>
+              <Spinner size="sm" label="Sending invitation" />
+              <span>Sending…</span>
+            </>
+          ) : (
+            'Send invitation email'
+          )}
         </button>
       </form>
     </div>

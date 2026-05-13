@@ -141,7 +141,7 @@ async function seedOrder() {
       orderNumber: 'ORD-000001',
       clientId: client.id,
       title: 'Household Survey — Kano State Zone A & B',
-      description: 'We need a comprehensive household survey across Zone A and B of Kano State.\n\nObjective: Understand household income patterns, access to clean water, and sanitation infrastructure.\n\nTarget: 400 households total (200 per zone)\nMethodology: In-person structured interviews using ODK\nTimeline: 3 weeks from start date\nExpected output: Final report with data tables, charts, and executive summary',
+      description: 'We need a comprehensive household survey across Zone A and B of Kano State.\n\nObjective: Understand household income patterns, access to clean water, and sanitation infrastructure.\n\nTarget: 400 households total (200 per zone)\nMethodology: In-person structured interviews with digital capture\nTimeline: 3 weeks from start date\nExpected output: Final report with data tables, charts, and executive summary',
       service: 'DIGITAL_SURVEY',
       priority: 'high',
       deliveryMethod: 'BOTH',

@@ -33,7 +33,7 @@ export function getEmailPreviews(): EmailPreviewItem[] {
   const orderNumber = 'ORD-000042'
   const orderTitle = 'Household Survey — Kano State'
   const briefExcerpt =
-    'Objective: Understand household income patterns and access to clean water. Target: 400 households across two zones. Methodology: structured interviews using ODK…'
+    'Objective: Understand household income patterns and access to clean water. Target: 400 households across two zones. Methodology: structured interviews with digital capture…'
   const invoiceNo = 'INV-0041'
   const amount = 900_000
 
