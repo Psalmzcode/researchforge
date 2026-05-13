@@ -30,7 +30,7 @@ export default async function ResearcherProjectsPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Projects you&apos;re assigned to</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           ['Total Projects', projects.length, 'var(--accent)'],
           ['Active', active, '#f0a500'],
@@ -55,8 +55,8 @@ export default async function ResearcherProjectsPage() {
             const asgn = p.assignments[0]
             return (
               <div key={p.id} className="rounded-2xl border p-5 transition-all hover:-translate-y-0.5" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
-                <div className="flex items-start justify-between mb-3">
-                  <div>
+                <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <h3 className="font-semibold text-sm">{p.title}</h3>
                     <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>{p.client.organization || p.client.name}</p>
                   </div>
@@ -77,9 +77,9 @@ export default async function ResearcherProjectsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs" style={{ color: 'var(--muted)' }}>
+                <div className="flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between" style={{ color: 'var(--muted)' }}>
                   <span>📄 {p._count.files} files · 📦 {p._count.orders} orders</span>
-                  <span>{p.dueDate ? `Due ${formatDate(p.dueDate)}` : 'No deadline'}</span>
+                  <span className="shrink-0">{p.dueDate ? `Due ${formatDate(p.dueDate)}` : 'No deadline'}</span>
                 </div>
               </div>
             )

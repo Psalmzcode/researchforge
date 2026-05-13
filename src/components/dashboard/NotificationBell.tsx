@@ -32,7 +32,7 @@ export function NotificationBell() {
         )}
       </button>
       {open && (
-        <div className="absolute right-0 top-10 w-80 rounded-2xl border shadow-2xl z-50 overflow-hidden"
+        <div className="absolute right-0 top-10 z-[70] w-[min(20rem,calc(100vw-1.5rem))] max-w-[calc(100vw-1.5rem)] rounded-2xl border shadow-2xl overflow-hidden sm:w-80 sm:max-w-none"
           style={{ background: 'var(--navy-mid)', borderColor: 'var(--card-border)' }}>
           <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--card-border)' }}>
             <span className="text-sm font-semibold">Notifications</span>

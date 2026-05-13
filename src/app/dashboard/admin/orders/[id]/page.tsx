@@ -55,7 +55,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             <div className="space-y-3 text-sm">
               <div><span className="text-xs font-medium" style={{ color:'var(--muted)' }}>Description</span><p className="mt-1 leading-relaxed">{order.description}</p></div>
               {order.notes && <div><span className="text-xs font-medium" style={{ color:'var(--muted)' }}>Additional Notes</span><p className="mt-1">{order.notes}</p></div>}
-              <div className="grid grid-cols-3 gap-3 pt-2 border-t" style={{ borderColor:'var(--card-border)' }}>
+              <div className="grid grid-cols-1 gap-3 pt-2 border-t sm:grid-cols-3" style={{ borderColor:'var(--card-border)' }}>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Service</span><p className="font-medium mt-0.5 text-sm">{order.service.replace('_',' ')}</p></div>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Delivery</span><p className="font-medium mt-0.5 text-sm">{order.deliveryMethod}</p></div>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Deadline</span><p className="font-medium mt-0.5 text-sm">{order.deadline ? formatDate(order.deadline) : '—'}</p></div>

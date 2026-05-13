@@ -11,6 +11,7 @@ const navByRole: Record<string,{label:string;href:string;icon:string}[]> = {
     { label:'Clients',        href:'/dashboard/admin/clients',   icon:'👥' },
     { label:'Invoices',       href:'/dashboard/admin/invoices',  icon:'🧾' },
     { label:'Team',           href:'/dashboard/admin/team',      icon:'🔬' },
+    { label:'Email templates',href:'/dashboard/admin/emails',  icon:'✉️' },
     { label:'Settings',       href:'/dashboard/admin/settings',  icon:'⚙️'  },
   ],
   CLIENT: [
@@ -42,7 +43,13 @@ const roleTextColors: Record<string,string> = {
   ADMIN:'#378add',CLIENT:'var(--accent)',RESEARCHER:'#f0a500',FINANCE:'#e24b4a'
 }
 
-export function DashboardSidebar({ user }: { user: any }) {
+type SidebarProps = {
+  user: any
+  mobileOpen?: boolean
+  onCloseMobile?: () => void
+}
+
+export function DashboardSidebar({ user, mobileOpen = false, onCloseMobile }: SidebarProps) {
   const pathname = usePathname()
   const role = typeof user?.role === 'string' ? user.role : 'CLIENT'
   const links = navByRole[role] || navByRole.CLIENT
@@ -53,41 +60,60 @@ export function DashboardSidebar({ user }: { user: any }) {
   }
 
   return (
-    <aside className="w-56 flex-shrink-0 flex flex-col border-r min-h-screen"
-      style={{ background: 'var(--navy-mid)', borderColor: 'var(--card-border)' }}>
+    <aside
+      id="dashboard-sidebar"
+      className={`fixed inset-y-0 left-0 z-50 flex min-h-screen w-[min(100vw,15rem)] flex-shrink-0 flex-col border-r transition-transform duration-200 ease-out sm:w-56 lg:static lg:z-auto lg:min-h-screen lg:translate-x-0 ${
+        mobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+      }`}
+      style={{ background: 'var(--navy-mid)', borderColor: 'var(--card-border)' }}
+    >
       {/* Brand */}
-      <div className="px-5 py-5 border-b" style={{ borderColor: 'var(--card-border)' }}>
-        <Link href="/" className="font-serif text-xl font-bold" style={{ color: 'var(--text)' }}>
-          Research<span style={{ color: 'var(--accent)' }}>Forge</span>
-        </Link>
-        <div className="mt-3 flex items-center gap-2">
+      <div className="flex items-start justify-between gap-2 border-b px-4 py-4 sm:px-5 sm:py-5" style={{ borderColor: 'var(--card-border)' }}>
+        <div className="min-w-0">
+          <Link href="/" className="font-serif text-lg font-bold sm:text-xl" style={{ color: 'var(--text)' }} onClick={onCloseMobile}>
+            Research<span style={{ color: 'var(--accent)' }}>Forge</span>
+          </Link>
+          <div className="mt-3 flex items-center gap-2">
           <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
             style={{ background: roleColors[role] || 'rgba(0,198,162,.2)', color: roleTextColors[role] || 'var(--accent)' }}>
             {(user.name || 'U')[0]}
           </div>
           <div className="min-w-0">
-            <div className="text-[.78rem] font-medium truncate" style={{ color: 'var(--text)' }}>{user.name}</div>
+            <div className="text-[.78rem] font-medium truncate" style={{ color: 'var(--text)' }}>{user.name || user.email}</div>
             <div className="text-[.65rem] px-1.5 py-0.5 rounded inline-block font-semibold mt-0.5"
               style={{ background: roleColors[role], color: roleTextColors[role] }}>
               {role}
             </div>
           </div>
+          </div>
         </div>
+        <button
+          type="button"
+          className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border lg:hidden"
+          style={{ borderColor: 'var(--card-border)', color: 'var(--muted)' }}
+          aria-label="Close menu"
+          onClick={onCloseMobile}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+            <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+          </svg>
+        </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
+      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-3 sm:px-3 sm:py-4">
         {links.map(l => {
           const active = isActive(l.href)
           return (
             <Link key={l.href} href={l.href}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[.83rem] font-medium transition-all duration-150"
+              onClick={onCloseMobile}
+              className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[.8rem] font-medium transition-all duration-150 sm:text-[.83rem]"
               style={{
                 background: active ? 'rgba(0,198,162,.1)' : 'transparent',
                 color: active ? 'var(--accent)' : 'var(--muted)',
                 borderLeft: active ? '2px solid var(--accent)' : '2px solid transparent',
               }}>
-              <span className="text-base flex-shrink-0">{l.icon}</span>
+              <span className="flex-shrink-0 text-base">{l.icon}</span>
               <span className="truncate">{l.label}</span>
             </Link>
           )
@@ -95,8 +121,8 @@ export function DashboardSidebar({ user }: { user: any }) {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t space-y-0.5" style={{ borderColor: 'var(--card-border)' }}>
-        <Link href="/" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[.83rem] font-medium transition-all" style={{ color: 'var(--muted)' }}>
+      <div className="space-y-0.5 border-t px-2 py-3 sm:px-3 sm:py-4" style={{ borderColor: 'var(--card-border)' }}>
+        <Link href="/" onClick={onCloseMobile} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[.8rem] font-medium transition-all sm:text-[.83rem]" style={{ color: 'var(--muted)' }}>
           <span>🌐</span><span>View Website</span>
         </Link>
         <button onClick={() => signOut({ callbackUrl: '/' })}

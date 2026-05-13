@@ -50,7 +50,7 @@ export default async function FinanceRevenuePage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Breakdown of all collected revenue</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           ['Total Revenue', formatCurrency(totalRevenue), 'var(--accent)'],
           ['Paid Invoices', invoices.length, '#378add'],
@@ -138,7 +138,8 @@ export default async function FinanceRevenuePage() {
         <div className="px-5 py-3 border-b" style={{ borderColor: 'var(--card-border)' }}>
           <h2 className="font-semibold text-sm">Paid Invoices</h2>
         </div>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px] text-sm">
           <thead>
             <tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Invoice', 'Client', 'Service', 'Amount', 'Paid On'].map(h => (
@@ -161,6 +162,7 @@ export default async function FinanceRevenuePage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

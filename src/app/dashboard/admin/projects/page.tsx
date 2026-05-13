@@ -20,14 +20,15 @@ export default async function AdminProjectsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div><h1 className="font-serif text-2xl font-bold">Projects</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="font-serif text-xl font-bold sm:text-2xl">Projects</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All client projects</p></div>
-        <button className="px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5" style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}>+ New Project</button>
+        <button className="w-full shrink-0 rounded-full px-5 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 sm:w-auto" style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}>+ New Project</button>
       </div>
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[720px] text-sm">
             <thead><tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Project','Client','Service','Team','Budget','Invoiced','Status','Due'].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>

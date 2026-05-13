@@ -46,7 +46,7 @@ export default async function ResearcherOrderDetailPage({ params }: { params: { 
             <div className="space-y-3 text-sm">
               <div><span className="text-xs font-medium" style={{ color:'var(--muted)' }}>Project Description</span><p className="mt-1 leading-relaxed">{order.description}</p></div>
               {order.notes&&<div><span className="text-xs font-medium" style={{ color:'var(--muted)' }}>Additional Notes</span><p className="mt-1">{order.notes}</p></div>}
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t" style={{ borderColor:'var(--card-border)' }}>
+              <div className="grid grid-cols-1 gap-3 border-t pt-2 sm:grid-cols-2" style={{ borderColor:'var(--card-border)' }}>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Client</span><p className="font-medium mt-0.5">{order.client.organization||order.client.name}</p></div>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Service</span><p className="font-medium mt-0.5">{order.service.replace('_',' ')}</p></div>
                 <div><span className="text-xs" style={{ color:'var(--muted)' }}>Deadline</span><p className="font-medium mt-0.5">{order.deadline?formatDate(order.deadline):'—'}</p></div>

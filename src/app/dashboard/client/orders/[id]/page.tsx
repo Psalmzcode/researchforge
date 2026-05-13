@@ -261,7 +261,7 @@ export default async function ClientOrderDetailPage({ params }: { params: { id: 
             <div className="space-y-3 text-sm">
               <div><span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>Description</span><p className="mt-1 leading-relaxed">{order.description}</p></div>
               {order.notes && <div><span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>Additional Notes</span><p className="mt-1">{order.notes}</p></div>}
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
                 <div><span className="text-xs" style={{ color: 'var(--muted)' }}>Service</span><p className="font-medium mt-0.5">{order.service.replace('_',' ')}</p></div>
                 <div><span className="text-xs" style={{ color: 'var(--muted)' }}>Priority</span><p className="font-medium mt-0.5 capitalize">{order.priority}</p></div>
                 <div><span className="text-xs" style={{ color: 'var(--muted)' }}>Delivery</span><p className="font-medium mt-0.5">{order.deliveryMethod}</p></div>

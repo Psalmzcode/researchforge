@@ -24,7 +24,7 @@ export default async function ResearcherDashboard() {
         <h1 className="font-serif text-2xl font-bold">My Tasks</h1>
         <p className="text-[.88rem] mt-1" style={{color:'var(--muted)'}}>Field assignments and data collection</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Assigned Tasks" value={assignments.length} sub={`${pending} active`} />
         <StatCard label="Active Projects" value={projects.length} sub="Assigned to me" />
         <StatCard label="Tasks Complete" value={done} sub={done > 0 ? 'Great work!' : 'Keep going'} subColor={done > 0 ? 'up' : undefined} />
@@ -34,7 +34,7 @@ export default async function ResearcherDashboard() {
         <div className="lg:col-span-2 rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
           <h2 className="font-semibold text-[.93rem] mb-4">Task Assignments</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-[.82rem]">
+            <table className="w-full min-w-[640px] text-[.82rem]">
               <thead><tr className="border-b" style={{borderColor:'var(--card-border)'}}>
                 {['Task','Project','Client','Progress','Status'].map(h=><th key={h} className="text-left pb-3 font-medium" style={{color:'var(--muted)'}}>{h}</th>)}
               </tr></thead>

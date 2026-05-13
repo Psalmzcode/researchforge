@@ -27,7 +27,7 @@ export default async function FinanceInvoicesPage() {
       <div><h1 className="font-serif text-2xl font-bold">Invoice Management</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Track payments, send invoices, manage collections</p></div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {[
           ['Total Invoices', invoices.length, '', ''],
           ['Paid', invoices.filter(i=>i.status==='PAID').length, formatCurrency(totalRevenue), 'up'],
@@ -44,7 +44,7 @@ export default async function FinanceInvoicesPage() {
 
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[800px] text-sm">
             <thead><tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Invoice','Client','Project','Amount','Paid','Type','Due','Status',''].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>

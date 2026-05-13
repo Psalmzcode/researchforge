@@ -24,7 +24,7 @@ export default async function ClientInvoicesPage() {
       <div><h1 className="font-serif text-2xl font-bold">Invoices & Payments</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Your billing history and payment status</p></div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         <div className="rounded-2xl border p-4" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
           <div className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Total Invoices</div>
           <div className="font-serif text-2xl font-bold">{invoices.length}</div>
@@ -41,7 +41,7 @@ export default async function ClientInvoicesPage() {
 
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[880px] text-sm">
             <thead><tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Invoice','Project','Amount','Paid','Balance','Type','Due Date','Status',''].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>

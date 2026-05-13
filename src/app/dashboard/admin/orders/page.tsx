@@ -20,11 +20,11 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div><h1 className="font-serif text-2xl font-bold">Order Management</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div><h1 className="font-serif text-xl font-bold sm:text-2xl">Order Management</h1>
         <p className="text-sm mt-1" style={{ color:'var(--muted)' }}>Review, assign, and deliver client work</p></div>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {[['New', groups.new.length,'#e24b4a'],['Reviewing',groups.reviewing.length,'#f0a500'],['In Progress',groups.active.length,'#378add'],['Completed',groups.done.length,'#00c6a2']].map(([l,c,col])=>(
           <div key={l} className="rounded-2xl border p-4 text-center" style={{ background:'var(--card-bg)',borderColor:'var(--card-border)' }}>
             <div className="text-2xl font-bold" style={{ color: col as string }}>{c}</div>
@@ -34,7 +34,7 @@ export default async function AdminOrdersPage() {
       </div>
       <div className="rounded-2xl border overflow-hidden" style={{ background:'var(--card-bg)',borderColor:'var(--card-border)' }}>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[920px] text-sm">
             <thead><tr className="border-b" style={{ borderColor:'var(--card-border)' }}>
               {['Order','Client','Service','Priority','Assigned','Brief','Status','Due',''].map(h=>(
                 <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color:'var(--muted)' }}>{h}</th>

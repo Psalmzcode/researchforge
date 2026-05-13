@@ -129,7 +129,7 @@ export default function NewOrderPage() {
                 </select>
                 <p className="text-[11px]" style={{ color: 'var(--muted)' }}>Required for <strong>installment payment gating</strong>: orders tied to a project use that project&apos;s installment invoices to control when final deliverables are released.</p>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-semibold tracking-wide" style={{ color: 'var(--muted)' }}>Priority</label>
                   <select className={inp} style={inpStyle} value={form.priority} onChange={e => set('priority', e.target.value)}>

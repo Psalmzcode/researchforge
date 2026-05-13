@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
+import { AdminStaffInvite } from '@/components/dashboard/AdminStaffInvite'
 
 const roleColors: Record<string, { bg: string; color: string }> = {
   ADMIN: { bg: 'rgba(55,138,221,.12)', color: '#378add' },
@@ -33,7 +34,7 @@ export default async function AdminTeamPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Internal staff and researcher accounts</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {[
           ['Admins', admins.length, '#378add'],
           ['Researchers', researchers.length, '#f0a500'],
@@ -46,8 +47,10 @@ export default async function AdminTeamPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
-        <table className="w-full text-sm">
+      <AdminStaffInvite />
+
+      <div className="overflow-x-auto rounded-2xl border" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+        <table className="w-full min-w-[720px] text-sm">
           <thead>
             <tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Member', 'Email', 'Role', 'Organization', 'Assignments', 'Joined'].map(h => (

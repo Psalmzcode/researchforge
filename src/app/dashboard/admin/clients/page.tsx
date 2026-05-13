@@ -26,8 +26,8 @@ export default async function AdminClientsPage() {
     <div className="space-y-6">
       <div><h1 className="font-serif text-2xl font-bold">Clients</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All registered client accounts</p></div>
-      <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-2xl border" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+        <table className="w-full min-w-[800px] text-sm">
           <thead><tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
             {['Client','Email','Organization','Preview DL','Projects','Orders','Invoices','Joined'].map(h => (
               <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>

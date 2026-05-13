@@ -10,7 +10,7 @@ export default function SignupPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -23,15 +23,20 @@ export default function SignupPage() {
       const data = await res.json().catch(() => ({}))
       setLoading(false)
       if (!res.ok) {
-        setError(data.error || 'Could not create account')
+        setError(data.error || 'Could not start registration')
         return
       }
-      router.push('/login?registered=1')
+      const email = form.email.trim().toLowerCase()
+      router.push(`/signup/verify?email=${encodeURIComponent(email)}`)
     } catch {
       setLoading(false)
       setError('Something went wrong. Try again.')
     }
   }
+
+  const inputClass =
+    'w-full rounded-xl px-4 py-3 text-[.9rem] outline-none border transition-all focus:border-[var(--accent)]'
+  const inputStyle = { background: 'rgba(255,255,255,.05)', borderColor: 'var(--card-border)', color: 'var(--text)' }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5" style={{ background: 'var(--navy)' }}>
@@ -45,9 +50,9 @@ export default function SignupPage() {
         <div className="rounded-3xl p-10 border" style={{ background: 'rgba(255,255,255,.04)', borderColor: 'var(--card-border)' }}>
           <h1 className="text-xl font-bold mb-1">Create an account</h1>
           <p className="text-[.88rem] mb-8" style={{ color: 'var(--muted)' }}>
-            Sign up as a client to submit orders and track projects.
+            Sign up as a client. Next, you&apos;ll open the verification page and enter the code we email you.
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleRegister} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-[.77rem] font-semibold tracking-[.04em]" style={{ color: 'var(--muted)' }}>
                 Name <span className="font-normal opacity-70">(optional)</span>
@@ -57,8 +62,8 @@ export default function SignupPage() {
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="Your name"
-                className="w-full rounded-xl px-4 py-3 text-[.9rem] outline-none border transition-all focus:border-[var(--accent)]"
-                style={{ background: 'rgba(255,255,255,.05)', borderColor: 'var(--card-border)', color: 'var(--text)' }}
+                className={inputClass}
+                style={inputStyle}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -71,8 +76,8 @@ export default function SignupPage() {
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                 placeholder="you@organization.com"
-                className="w-full rounded-xl px-4 py-3 text-[.9rem] outline-none border transition-all focus:border-[var(--accent)]"
-                style={{ background: 'rgba(255,255,255,.05)', borderColor: 'var(--card-border)', color: 'var(--text)' }}
+                className={inputClass}
+                style={inputStyle}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -86,8 +91,8 @@ export default function SignupPage() {
                 value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
                 placeholder="At least 8 characters"
-                className="w-full rounded-xl px-4 py-3 text-[.9rem] outline-none border transition-all focus:border-[var(--accent)]"
-                style={{ background: 'rgba(255,255,255,.05)', borderColor: 'var(--card-border)', color: 'var(--text)' }}
+                className={inputClass}
+                style={inputStyle}
               />
             </div>
             {error && <p className="text-[.83rem] text-red-400">{error}</p>}
@@ -97,7 +102,7 @@ export default function SignupPage() {
               className="w-full py-3.5 rounded-full font-bold text-[.93rem] mt-2 transition-all hover:-translate-y-0.5 disabled:opacity-70"
               style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
             >
-              {loading ? 'Creating account…' : 'Sign up →'}
+              {loading ? 'Sending code…' : 'Continue to verification →'}
             </button>
           </form>
           <p className="text-center mt-6 text-[.83rem]" style={{ color: 'var(--muted)' }}>

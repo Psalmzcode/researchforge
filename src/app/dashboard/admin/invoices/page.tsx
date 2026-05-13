@@ -24,7 +24,7 @@ export default async function AdminInvoicesPage() {
       <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All project invoices and payment status</p></div>
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[880px] text-sm">
             <thead><tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Invoice #','Client','Project','Amount','Paid','Balance','Type','Due','Status',''].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>

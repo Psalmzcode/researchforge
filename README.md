@@ -30,7 +30,7 @@ Visit: http://localhost:3000
 
 | Role        | Email                      | Password     |
 |-------------|----------------------------|--------------|
-| Admin       | admin@researchforge.com     | admin123     |
+| Admin       | researchforgeconsulting@gmail.com | Consultus2026 |
 | Client      | aisha@unicef.org           | client123    |
 | Researcher  | tunde@researchforge.com     | research123  |
 | Finance     | ngozi@researchforge.com     | finance123   |

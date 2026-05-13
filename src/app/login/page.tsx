@@ -8,11 +8,13 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email:'', password:'' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [registeredOk, setRegisteredOk] = useState(false)
+  const [banner, setBanner] = useState<'registered' | 'invited' | null>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if (new URLSearchParams(window.location.search).get('registered') === '1') setRegisteredOk(true)
+    const q = new URLSearchParams(window.location.search)
+    if (q.get('registered') === '1') setBanner('registered')
+    else if (q.get('invited') === '1') setBanner('invited')
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -52,9 +54,14 @@ export default function LoginPage() {
         <div className="rounded-3xl p-10 border" style={{background:'rgba(255,255,255,.04)',borderColor:'var(--card-border)'}}>
           <h1 className="text-xl font-bold mb-1">Welcome back</h1>
           <p className="text-[.88rem] mb-8" style={{color:'var(--muted)'}}>Sign in to your dashboard</p>
-          {registeredOk && (
+          {banner === 'registered' && (
             <p className="text-[.83rem] mb-4 p-3 rounded-xl" style={{background:'rgba(0,198,162,.12)',color:'var(--accent)'}}>
-              Account created. You can sign in below.
+              Email verified and your client account is ready. Sign in below.
+            </p>
+          )}
+          {banner === 'invited' && (
+            <p className="text-[.83rem] mb-4 p-3 rounded-xl" style={{background:'rgba(0,198,162,.12)',color:'var(--accent)'}}>
+              Your team account is set up. Sign in below.
             </p>
           )}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -81,7 +88,7 @@ export default function LoginPage() {
           </form>
           <div className="mt-6 p-4 rounded-xl text-[.78rem] leading-6" style={{background:'rgba(0,198,162,.05)',color:'var(--muted)'}}>
             <strong style={{ color: 'var(--text)' }}>Test accounts:</strong><br/>
-            admin@researchforge.com / admin123<br/>
+            researchforgeconsulting@gmail.com / Consultus2026<br/>
             aisha@unicef.org / client123<br/>
             tunde@researchforge.com / research123<br/>
             ngozi@researchforge.com / finance123

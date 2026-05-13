@@ -29,7 +29,7 @@ export default async function FinanceDashboard() {
         <h1 className="font-serif text-2xl font-bold">Finance Overview</h1>
         <p className="text-[.88rem] mt-1" style={{color:'var(--muted)'}}>Revenue, invoices, and payment tracking</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Total Revenue (YTD)" value={formatCurrency(totalRevenue)} sub="+24% vs last year" subColor="up" />
         <StatCard label="Outstanding Invoices" value={formatCurrency(outstanding)} sub={`${invoices.filter(i=>i.status==='SENT').length} invoices pending`} subColor="down" />
         <StatCard label="Overdue Payments" value={overdue} sub={overdue > 0 ? 'Needs follow-up' : 'All on time'} subColor={overdue > 0 ? 'down' : 'up'} />
@@ -39,7 +39,7 @@ export default async function FinanceDashboard() {
         <div className="lg:col-span-2 rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
           <h2 className="font-semibold text-[.93rem] mb-4">Invoice Tracker</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-[.82rem]">
+            <table className="w-full min-w-[640px] text-[.82rem]">
               <thead><tr className="border-b" style={{borderColor:'var(--card-border)'}}>
                 {['Invoice','Client','Amount','Type','Due','Status'].map(h=><th key={h} className="text-left pb-3 font-medium" style={{color:'var(--muted)'}}>{h}</th>)}
               </tr></thead>
@@ -62,7 +62,7 @@ export default async function FinanceDashboard() {
         <div className="flex flex-col gap-5">
           <div className="rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
             <h2 className="font-semibold text-[.93rem] mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {[['Create Invoice','#'],['Send Reminder','#'],['Export CSV','#'],['Revenue Report','#']].map(([l,h])=>(
                 <a key={l} href={h} className="p-3 rounded-xl text-center text-[.78rem] font-medium border transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]" style={{background:'rgba(255,255,255,.03)',borderColor:'var(--card-border)',color:'var(--muted)'}}>{l}</a>
               ))}

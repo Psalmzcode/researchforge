@@ -24,10 +24,10 @@ export default async function ClientDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-2xl font-bold">Welcome, {user.name?.split(' ')[0]}</h1>
+        <h1 className="font-serif text-xl font-bold sm:text-2xl">Welcome, {user.name?.split(' ')[0]}</h1>
         <p className="text-[.88rem] mt-1" style={{color:'var(--muted)'}}>Here&apos;s your project overview</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="My Projects" value={projects.length} sub={`${projects.filter(p=>p.status==='ACTIVE').length} active`} />
         <StatCard label="Total Spent" value={formatCurrency(totalSpent)} sub="Across all projects" />
         <StatCard label="Next Payment Due" value={nextDue ? formatDate(nextDue.dueDate!) : 'None'} sub={nextDue ? formatCurrency(nextDue.amount - nextDue.amountPaid) + ' balance' : 'All paid'} subColor={nextDue ? 'down' : 'up'} />
@@ -43,8 +43,8 @@ export default async function ClientDashboard() {
               const pct = total > 0 ? Math.round(paid/total*100) : 0
               return (
                 <div key={p.id} className="p-4 rounded-xl border" style={{borderColor:'var(--card-border)'}}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-[.9rem]">{p.title}</span>
+                  <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <span className="min-w-0 font-medium text-[.9rem]">{p.title}</span>
                     <StatusBadge status={p.status}/>
                   </div>
                   <div className="text-[.78rem] mb-2" style={{color:'var(--muted)'}}>{p.service.replace('_',' ')} {p.dueDate ? `· Due ${formatDate(p.dueDate)}` : ''}</div>
@@ -81,7 +81,7 @@ export default async function ClientDashboard() {
           </div>
           <div className="rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
             <h2 className="font-semibold text-[.93rem] mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {[['+ New Request','/#contact'],['Download Report','#'],['Message Team','#'],['View All Invoices','/dashboard/client/invoices']].map(([l,h])=>(
                 <a key={l} href={h} className="p-3 rounded-xl text-center text-[.78rem] font-medium border transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]" style={{background:'rgba(255,255,255,.03)',borderColor:'var(--card-border)',color:'var(--muted)'}}>{l}</a>
               ))}

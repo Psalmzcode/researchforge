@@ -28,7 +28,7 @@ export default async function ResearcherDataPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Brief files received and deliverables uploaded</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           ['Orders', orders.length, 'var(--accent)'],
           ['Brief Files', totalBriefs, '#378add'],

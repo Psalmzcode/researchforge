@@ -28,7 +28,7 @@ export default async function ClientReportsPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All deliverables across your orders</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div className="rounded-2xl border p-4" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
           <div className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Total Files</div>
           <div className="font-serif text-2xl font-bold">{totalFiles}</div>

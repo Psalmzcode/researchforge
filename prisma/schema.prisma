@@ -75,6 +75,37 @@ model User {
   reviewedOrders Order[]        @relation("ReviewerOrders")
   orderMessages  OrderMessage[]
   notifications  Notification[]
+  staffInvitesCreated StaffInvite[] @relation("StaffInviteInviter")
+}
+
+/// Client self-signup: verify OTP before User row is created.
+model SignupPending {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  codeHash     String
+  expiresAt    DateTime
+  attempts     Int      @default(0)
+  lastSentAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+}
+
+/// Admin-provisioned staff: single-use link to set password (verifies email).
+model StaffInvite {
+  id            String    @id @default(cuid())
+  email         String
+  name          String?
+  role          Role
+  organization  String?
+  tokenHash     String    @unique
+  expiresAt     DateTime
+  invitedById   String
+  consumedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  invitedBy     User      @relation("StaffInviteInviter", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([email])
 }
 
 model Account {

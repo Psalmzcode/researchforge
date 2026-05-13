@@ -36,7 +36,7 @@ export default async function FinancePaymentsPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All payment transactions across invoices</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {[
           ['Total Payments', payments.length, '', ''],
           ['Received', payments.filter(p => p.status === 'success').length, formatCurrency(totalReceived), 'up'],
@@ -52,7 +52,7 @@ export default async function FinancePaymentsPage() {
       </div>
 
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[720px] text-sm">
           <thead>
             <tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
               {['Reference', 'Client', 'Project', 'Amount', 'Gateway', 'Status', 'Date'].map(h => (

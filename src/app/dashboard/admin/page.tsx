@@ -23,10 +23,10 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-2xl font-bold">Admin Dashboard</h1>
+        <h1 className="font-serif text-xl font-bold sm:text-2xl">Admin Dashboard</h1>
         <p className="text-[.88rem] mt-1" style={{color:'var(--muted)'}}>Full platform overview</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Active Projects" value={activeProjects} sub={`${projects.length} total`} />
         <StatCard label="Total Clients" value={users} sub="+5 this month" subColor="up" />
         <StatCard label="Revenue (MTD)" value={formatCurrency(mtdRevenue)} sub="+18% vs last month" subColor="up" />
@@ -36,7 +36,7 @@ export default async function AdminDashboard() {
         <div className="lg:col-span-2 rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
           <h2 className="font-semibold text-[.93rem] mb-4">All Projects</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-[.82rem]">
+            <table className="w-full min-w-[640px] text-[.82rem]">
               <thead><tr className="border-b" style={{borderColor:'var(--card-border)'}}>
                 <th className="text-left pb-3 font-medium" style={{color:'var(--muted)'}}>Project</th>
                 <th className="text-left pb-3 font-medium" style={{color:'var(--muted)'}}>Client</th>
@@ -60,7 +60,7 @@ export default async function AdminDashboard() {
         <div className="flex flex-col gap-5">
           <div className="rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
             <h2 className="font-semibold text-[.93rem] mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {[['+ New Project','#'],['Create Quote','#'],['Add Client','#'],['View Reports','#']].map(([label,href])=>(
                 <a key={label} href={href} className="p-3 rounded-xl text-center text-[.82rem] font-medium border transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]" style={{background:'rgba(255,255,255,.03)',borderColor:'var(--card-border)',color:'var(--muted)'}}>{label}</a>
               ))}

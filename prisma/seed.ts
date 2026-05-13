@@ -6,33 +6,70 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('Seeding database...')
 
-  const adminPw = await bcrypt.hash('admin123', 12)
+  const adminPw = await bcrypt.hash('Consultus2026', 12)
   const clientPw = await bcrypt.hash('client123', 12)
   const researchPw = await bcrypt.hash('research123', 12)
   const financePw = await bcrypt.hash('finance123', 12)
 
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@researchforge.com' },
-    update: {},
-    create: { name: 'Chukwuemeka O.', email: 'admin@researchforge.com', password: adminPw, role: Role.ADMIN, organization: 'ResearchForge' },
+  const verified = new Date()
+
+  await prisma.user.deleteMany({ where: { email: 'admin@researchforge.com' } })
+
+  await prisma.user.upsert({
+    where: { email: 'researchforgeconsulting@gmail.com' },
+    update: {
+      password: adminPw,
+      emailVerified: verified,
+      role: Role.ADMIN,
+      organization: 'ResearchForge Consulting',
+    },
+    create: {
+      name: 'ResearchForge Admin',
+      email: 'researchforgeconsulting@gmail.com',
+      password: adminPw,
+      role: Role.ADMIN,
+      organization: 'ResearchForge Consulting',
+      emailVerified: verified,
+    },
   })
 
   const client = await prisma.user.upsert({
     where: { email: 'aisha@unicef.org' },
-    update: {},
-    create: { name: 'Aisha Musa', email: 'aisha@unicef.org', password: clientPw, role: Role.CLIENT, organization: 'UNICEF NG' },
+    update: { emailVerified: verified },
+    create: {
+      name: 'Aisha Musa',
+      email: 'aisha@unicef.org',
+      password: clientPw,
+      role: Role.CLIENT,
+      organization: 'UNICEF NG',
+      emailVerified: verified,
+    },
   })
 
   const researcher = await prisma.user.upsert({
     where: { email: 'tunde@researchforge.com' },
-    update: {},
-    create: { name: 'Tunde Adeyemi', email: 'tunde@researchforge.com', password: researchPw, role: Role.RESEARCHER, organization: 'ResearchForge' },
+    update: { emailVerified: verified },
+    create: {
+      name: 'Tunde Adeyemi',
+      email: 'tunde@researchforge.com',
+      password: researchPw,
+      role: Role.RESEARCHER,
+      organization: 'ResearchForge',
+      emailVerified: verified,
+    },
   })
 
   const finance = await prisma.user.upsert({
     where: { email: 'ngozi@researchforge.com' },
-    update: {},
-    create: { name: 'Ngozi Eze', email: 'ngozi@researchforge.com', password: financePw, role: Role.FINANCE, organization: 'ResearchForge' },
+    update: { emailVerified: verified },
+    create: {
+      name: 'Ngozi Eze',
+      email: 'ngozi@researchforge.com',
+      password: financePw,
+      role: Role.FINANCE,
+      organization: 'ResearchForge',
+      emailVerified: verified,
+    },
   })
 
   const project = await prisma.project.upsert({
@@ -63,15 +100,16 @@ async function main() {
   })
 
   console.log('Seed complete. Test accounts:')
-  console.log('  admin@researchforge.com / admin123')
+  console.log('  researchforgeconsulting@gmail.com / Consultus2026')
   console.log('  aisha@unicef.org / client123')
   console.log('  tunde@researchforge.com / research123')
   console.log('  ngozi@researchforge.com / finance123')
+
+  await seedOrder()
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect())
 
-// Add a sample order
 async function seedOrder() {
   const client = await prisma.user.findUnique({ where: { email: 'aisha@unicef.org' } })
   const researcher = await prisma.user.findUnique({ where: { email: 'tunde@researchforge.com' } })
@@ -107,5 +145,3 @@ async function seedOrder() {
 
   console.log('Sample order seeded:', order.orderNumber)
 }
-
-seedOrder().catch(console.error)
