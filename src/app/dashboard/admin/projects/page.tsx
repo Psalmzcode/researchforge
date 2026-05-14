@@ -24,7 +24,13 @@ export default async function AdminProjectsPage() {
         <div>
           <h1 className="font-serif text-xl font-bold sm:text-2xl">Projects</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All client projects</p></div>
-        <button className="w-full shrink-0 rounded-full px-5 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 sm:w-auto" style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}>+ New Project</button>
+        <Link
+          href="/dashboard/admin/projects/new"
+          className="inline-flex w-full shrink-0 items-center justify-center rounded-full px-5 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 sm:w-auto"
+          style={{ background: 'var(--accent)', color: 'var(--text-on-accent)' }}
+        >
+          + New Project
+        </Link>
       </div>
       <div className="rounded-2xl border overflow-hidden" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
         <div className="overflow-x-auto">
