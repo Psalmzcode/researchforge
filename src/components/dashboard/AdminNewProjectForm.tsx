@@ -94,8 +94,9 @@ export function AdminNewProjectForm() {
         toast.error(await getJsonError(res))
         return
       }
+      const created = await res.json()
       toast.success('Project created.')
-      router.push('/dashboard/admin/projects')
+      router.push(`/dashboard/admin/projects/${created.id}`)
       router.refresh()
     } catch {
       toast.error('Could not create project.')

@@ -23,7 +23,10 @@ export default async function AdminProjectsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="font-serif text-xl font-bold sm:text-2xl">Projects</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>All client projects</p></div>
+          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
+            All client projects — open a project to add a quote; approving a quote creates the first invoice.
+          </p>
+        </div>
         <Link
           href="/dashboard/admin/projects/new"
           className="inline-flex w-full shrink-0 items-center justify-center rounded-full px-5 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 sm:w-auto"
@@ -45,7 +48,11 @@ export default async function AdminProjectsPage() {
                 const invoiced = p.invoices.reduce((a, i) => a + i.amountPaid, 0)
                 return (
                   <tr key={p.id} className="border-b last:border-0 hover:bg-[rgba(255,255,255,.02)]" style={{ borderColor: 'var(--card-border)' }}>
-                    <td className="px-4 py-3 font-medium max-w-[180px] truncate">{p.title}</td>
+                    <td className="px-4 py-3 font-medium max-w-[180px] truncate">
+                      <Link href={`/dashboard/admin/projects/${p.id}`} className="hover:underline" style={{ color: 'var(--accent)' }}>
+                        {p.title}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3">
                       <div className="text-xs font-medium">{p.client.organization || p.client.name}</div>
                       <div className="text-xs" style={{ color: 'var(--muted)' }}>{p.client.email}</div>
