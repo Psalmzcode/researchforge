@@ -1,32 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { verifyPaystackPayment, verifyPaystackWebhook } from '@/lib/paystack'
-import { releaseHeldOrdersAfterPayment } from '@/lib/order-release'
+import { recordPaystackSuccessfulPayment } from '@/lib/record-paystack-payment'
+import {
+  invoiceNumberFromSwReference,
+  metaInvoiceIdFromPaystack,
+  normalizePaystackMeta,
+} from '@/lib/paystack-parse'
 
 export async function POST(req: NextRequest) {
   const payload = await req.text()
   const sig = req.headers.get('x-paystack-signature') || ''
-  if (!verifyPaystackWebhook(payload, sig)) return NextResponse.json({ error:'Invalid signature' },{status:400})
+  if (!verifyPaystackWebhook(payload, sig)) return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   const event = JSON.parse(payload)
   if (event.event === 'charge.success') {
     const verification = await verifyPaystackPayment(event.data.reference)
-    if (verification.data?.status === 'success') {
-      const meta = verification.data.metadata || {}
-      const invoiceId = typeof meta.invoiceId === 'string' ? meta.invoiceId : meta.invoiceId?.toString?.()
-      if (!invoiceId) return NextResponse.json({ received:true })
-      const invoice = await db.invoice.findUnique({ where:{id:invoiceId} })
-      if (invoice) {
-        const newPaid = invoice.amountPaid + verification.data.amount/100
-        const isPaid = newPaid >= invoice.amount
-        await db.invoice.update({ where:{id:invoiceId}, data:{amountPaid:newPaid, status:isPaid?'PAID':'SENT', paidAt:isPaid?new Date():undefined, paystackRef:event.data.reference} })
-        await db.payment.create({ data:{invoiceId, amount:verification.data.amount/100, reference:event.data.reference, gateway:'paystack', status:'success', metadata:event.data} })
-        if (isPaid) {
-          await db.project.update({ where:{id:invoice.projectId}, data:{status:'ACTIVE'} })
-          await releaseHeldOrdersAfterPayment(invoice.clientId, invoice.projectId)
+    const data = verification?.data as Record<string, unknown> | undefined
+    if (data && String(data.status || '').toLowerCase() === 'success') {
+      const meta = normalizePaystackMeta(data.metadata)
+      let invoiceId = metaInvoiceIdFromPaystack(meta)
+
+      if (!invoiceId) {
+        const num = invoiceNumberFromSwReference(String(event.data.reference || ''))
+        if (num) {
+          const inv = await db.invoice.findUnique({ where: { number: num }, select: { id: true } })
+          if (inv) invoiceId = inv.id
         }
-        await db.activity.create({ data:{projectId:invoice.projectId, action:'Payment received', detail:`₦${(verification.data.amount/100).toLocaleString()} via Paystack`} })
+      }
+
+      if (!invoiceId) return NextResponse.json({ received: true })
+      const amountKobo = Number(data.amount)
+      if (Number.isFinite(amountKobo) && amountKobo > 0) {
+        await recordPaystackSuccessfulPayment({
+          reference: String(event.data.reference),
+          amountKobo,
+          invoiceId,
+          metadata: data,
+        })
       }
     }
   }
-  return NextResponse.json({ received:true })
+  return NextResponse.json({ received: true })
 }

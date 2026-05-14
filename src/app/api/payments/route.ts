@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     email: invoice.client.email,
     amount: amountDue,
     reference,
-    callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client/payment-result?ref=${encodeURIComponent(reference)}`,
+    callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client/payment-result?reference=${encodeURIComponent(reference)}&i=${encodeURIComponent(invoiceId)}`,
     metadata: { invoiceId, invoiceNumber: invoice.number },
   })
   if (result.status) return NextResponse.json({ authorizationUrl: result.data.authorization_url, reference })

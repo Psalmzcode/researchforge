@@ -5,6 +5,8 @@ import { StatusBadge } from '@/components/dashboard/StatusBadge'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { PayNowButton } from '@/components/dashboard/PayNowButton'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ClientInvoicesPage() {
   const session = await auth()
   if (!session) redirect('/login')

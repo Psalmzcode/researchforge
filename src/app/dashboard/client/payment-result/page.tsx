@@ -1,25 +1,27 @@
 'use client'
 import { useEffect, useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { Spinner } from '@/components/ui/Spinner'
 
 function PaymentResultInner() {
   const sp = useSearchParams()
-  const ref = sp.get('ref')
+  const router = useRouter()
+  /** Paystack redirects with `reference=` (docs); we also accept `ref` / `trxref`. */
+  const ref = sp.get('reference') || sp.get('ref') || sp.get('trxref')
   const [state, setState] = useState<'loading' | 'ok' | 'err'>('loading')
   const [detail, setDetail] = useState<string>('')
 
   useEffect(() => {
     if (!ref) {
       setState('err')
-      const msg = 'Missing payment reference.'
+      const msg = 'Missing payment reference (expected ?reference= from Paystack).'
       setDetail(msg)
       toast.error(msg)
       return
     }
-    fetch(`/api/payments/verify?ref=${encodeURIComponent(ref)}`)
+    fetch(`/api/payments/verify?reference=${encodeURIComponent(ref)}`)
       .then(async res => {
         const data = await res.json()
         if (res.ok && data.ok) {
@@ -27,6 +29,7 @@ function PaymentResultInner() {
           setState('ok')
           setDetail(d)
           toast.success('Payment confirmed', { description: d })
+          router.refresh()
         } else {
           const msg = data.error || 'Could not verify payment.'
           setState('err')
@@ -40,7 +43,7 @@ function PaymentResultInner() {
         setDetail(msg)
         toast.error(msg)
       })
-  }, [ref])
+  }, [ref, router])
 
   return (
     <div className="max-w-lg mx-auto space-y-6 py-16 px-6">
