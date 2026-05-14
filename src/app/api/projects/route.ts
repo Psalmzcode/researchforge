@@ -22,7 +22,12 @@ export async function GET(req: NextRequest) {
       user.role === 'CLIENT'
         ? { clientId: user.id }
         : user.role === 'RESEARCHER'
-          ? { assignments: { some: { userId: user.id } } }
+          ? {
+              OR: [
+                { assignments: { some: { userId: user.id } } },
+                { orders: { some: { assignedTo: user.id } } },
+              ],
+            }
           : {},
     include: {
       client: { select: { name: true, email: true, organization: true } },
