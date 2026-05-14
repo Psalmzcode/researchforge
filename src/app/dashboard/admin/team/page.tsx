@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { db } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
 import { AdminStaffInvite } from '@/components/dashboard/AdminStaffInvite'
@@ -36,7 +37,7 @@ export default async function AdminTeamPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {[
-          ['Admins', admins.length, '#378add'],
+          ['Admin', admins.length, '#378add'],
           ['Researchers', researchers.length, '#f0a500'],
           ['Finance', finance.length, '#e24b4a'],
         ].map(([label, count, color]) => (
@@ -53,9 +54,15 @@ export default async function AdminTeamPage() {
         <table className="w-full min-w-[720px] text-sm">
           <thead>
             <tr className="border-b" style={{ borderColor: 'var(--card-border)' }}>
-              {['Member', 'Email', 'Role', 'Organization', 'Assignments', 'Joined'].map(h => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>{h}</th>
-              ))}
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Member</th>
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Email</th>
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Role</th>
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Organization</th>
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Assignments</th>
+              <th className="text-left px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>Joined</th>
+              <th className="text-right px-4 py-3 text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -78,11 +85,20 @@ export default async function AdminTeamPage() {
                   <td className="px-4 py-3 text-xs">{u.organization || '—'}</td>
                   <td className="px-4 py-3 text-center text-xs font-bold" style={{ color: 'var(--accent)' }}>{u._count.assignments + u._count.assignedOrders}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: 'var(--muted)' }}>{formatDate(u.createdAt)}</td>
+                  <td className="px-4 py-3 text-right">
+                    <Link
+                      href={`/dashboard/admin/team/${u.id}`}
+                      className="text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors hover:border-[var(--accent)]"
+                      style={{ borderColor: 'var(--card-border)', color: 'var(--accent)' }}
+                    >
+                      Edit
+                    </Link>
+                  </td>
                 </tr>
               )
             })}
             {team.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--muted)' }}>No team members yet</td></tr>
+              <tr><td colSpan={7} className="px-4 py-12 text-center text-sm" style={{ color: 'var(--muted)' }}>No team members yet</td></tr>
             )}
           </tbody>
         </table>

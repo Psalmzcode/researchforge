@@ -8,6 +8,7 @@ import { DownloadButton } from '@/components/dashboard/DownloadButton'
 import { DeliverablePreviewPanel } from '@/components/dashboard/DeliverablePreviewPanel'
 import { WatermarkedDownloadButton } from '@/components/dashboard/WatermarkedDownloadButton'
 import { PayNowButton } from '@/components/dashboard/PayNowButton'
+import { orderMessageVisibilityWhere } from '@/lib/order-message-audience'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -73,7 +74,7 @@ export default async function ClientOrderDetailPage({ params }: { params: { id: 
       assignee: { select: { name: true } },
       briefFiles: true,
       deliverables: true,
-      messages: { where: { isInternal: false, deletedAt: null }, include: { user: { select: { name: true, role: true } } }, orderBy: { createdAt: 'asc' } },
+      messages: { where: orderMessageVisibilityWhere(params.id, 'CLIENT'), include: { user: { select: { name: true, role: true } } }, orderBy: { createdAt: 'asc' } },
       timeline: { orderBy: { createdAt: 'asc' } },
     },
   })

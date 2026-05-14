@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { DefaultResearcherShareSettings } from '@/components/dashboard/DefaultResearcherShareSettings'
+import { WebsiteManagerPayoutDetails } from '@/components/dashboard/WebsiteManagerPayoutDetails'
 
 export default async function AdminSettingsPage() {
   const session = await auth()
@@ -21,6 +23,25 @@ export default async function AdminSettingsPage() {
       <div>
         <h1 className="font-serif text-2xl font-bold">Settings</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Platform configuration and preferences</p>
+      </div>
+
+      <div
+        className="rounded-2xl border p-5"
+        style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+      >
+        <h2 className="text-sm font-semibold mb-1">Project payout defaults</h2>
+        <DefaultResearcherShareSettings />
+      </div>
+
+      <div
+        className="rounded-2xl border p-5"
+        style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+      >
+        <h2 className="text-sm font-semibold mb-1">Website / ops payout account</h2>
+        <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
+          Bank details for the platform share on completed projects (shown on project payout screens).
+        </p>
+        <WebsiteManagerPayoutDetails />
       </div>
 
       <div

@@ -4,8 +4,10 @@ import { db } from '@/lib/db'
 import { StatusBadge } from '@/components/dashboard/StatusBadge'
 import { formatDate } from '@/lib/utils'
 import { OrderMessages } from '@/components/dashboard/OrderMessages'
+import { OrderPayoutPanel } from '@/components/dashboard/OrderPayoutPanel'
 import { AdminOrderActions } from '@/components/dashboard/AdminOrderActions'
 import { DeliverWork } from '@/components/dashboard/DeliverWork'
+import { getDefaultResearcherSharePercent } from '@/lib/app-settings'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -27,16 +29,28 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
 
   if (!order) notFound()
 
-  const [researchers, clientProjects] = await Promise.all([
+  const [researchers, clientProjects, defaultShare] = await Promise.all([
     db.user.findMany({ where:{ role:'RESEARCHER' }, select:{ id:true,name:true,email:true } }),
     db.project.findMany({
       where: { clientId: order.clientId },
       select: { id: true, title: true },
       orderBy: { createdAt: 'desc' },
     }),
+    getDefaultResearcherSharePercent(),
   ])
 
   const stepLabel: Record<string,string> = { SUBMITTED:'Submitted',REVIEWING:'Under Review',IN_PROGRESS:'In Progress',NEEDS_CLARIFICATION:'Needs Clarification',PENDING_REVIEW:'Pending Admin Review',AWAITING_CLIENT_PAYMENT:'Awaiting final payment (preview)',COMPLETED:'Work Complete',DELIVERED:'Delivered',CANCELLED:'Cancelled' }
+
+  const o = order as typeof order & {
+    projectId?: string | null
+    researcherSharePercent?: number | null
+    researcherPaidAmount?: number | null
+    researcherPaidAt?: Date | null
+    researcherPayoutNote?: string | null
+    opsPayoutAmount?: number | null
+    opsPaidAt?: Date | null
+    opsPayoutNote?: string | null
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -112,6 +126,28 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         <div className="space-y-5">
           {/* Status + Assign */}
           <AdminOrderActions order={order as any} researchers={researchers} clientProjects={clientProjects}/>
+
+          <OrderPayoutPanel
+            defaultResearcherSharePercent={defaultShare}
+            linkedProjectId={o.projectId}
+            projectPayoutHref={o.projectId ? `/dashboard/admin/projects/${o.projectId}` : null}
+            order={{
+              id: o.id,
+              orderNumber: o.orderNumber,
+              title: o.title,
+              status: o.status,
+              budget: o.budget,
+              assignedTo: o.assignedTo,
+              assignee: o.assignee,
+              researcherSharePercent: o.researcherSharePercent ?? null,
+              researcherPaidAmount: o.researcherPaidAmount ?? null,
+              researcherPaidAt: o.researcherPaidAt ? o.researcherPaidAt.toISOString() : null,
+              researcherPayoutNote: o.researcherPayoutNote ?? null,
+              opsPayoutAmount: o.opsPayoutAmount ?? null,
+              opsPaidAt: o.opsPaidAt ? o.opsPaidAt.toISOString() : null,
+              opsPayoutNote: o.opsPayoutNote ?? null,
+            }}
+          />
 
           {/* Upload deliverable */}
           <DeliverWork orderId={order.id}/>

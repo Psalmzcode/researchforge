@@ -11,6 +11,7 @@ const navByRole: Record<string,{label:string;href:string;icon:string}[]> = {
     { label:'Clients',        href:'/dashboard/admin/clients',   icon:'👥' },
     { label:'Invoices',       href:'/dashboard/admin/invoices',  icon:'🧾' },
     { label:'Team',           href:'/dashboard/admin/team',      icon:'🔬' },
+    { label:'Staff payouts',  href:'/dashboard/finance/payouts', icon:'👷' },
     { label:'Email templates',href:'/dashboard/admin/emails',  icon:'✉️' },
     { label:'Settings',       href:'/dashboard/admin/settings',  icon:'⚙️'  },
   ],
@@ -30,6 +31,7 @@ const navByRole: Record<string,{label:string;href:string;icon:string}[]> = {
   ],
   FINANCE: [
     { label:'Overview',       href:'/dashboard/finance',           icon:'💰' },
+    { label:'Staff payouts',  href:'/dashboard/finance/payouts',   icon:'👷' },
     { label:'Invoices',       href:'/dashboard/finance/invoices',  icon:'🧾' },
     { label:'Payments',       href:'/dashboard/finance/payments',  icon:'💳' },
     { label:'Revenue Report', href:'/dashboard/finance/revenue',   icon:'📈' },

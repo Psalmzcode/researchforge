@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
+import { orderMessageVisibilityWhere } from '@/lib/order-message-audience'
 import { StatusBadge } from '@/components/dashboard/StatusBadge'
 import { formatDate } from '@/lib/utils'
 import { OrderMessages } from '@/components/dashboard/OrderMessages'
@@ -19,13 +20,18 @@ export default async function ResearcherOrderDetailPage({ params }: { params: { 
       client: { select:{ name:true,organization:true } },
       briefFiles: true,
       deliverables: true,
-      messages: { where:{ isInternal:false, deletedAt: null }, include:{ user:{ select:{ name:true,role:true } } }, orderBy:{ createdAt:'asc' } },
       timeline: { orderBy:{ createdAt:'asc' } },
     },
   })
 
   if (!order) notFound()
   if (order.assignedTo !== user.id && user.role !== 'ADMIN') redirect('/dashboard/researcher')
+
+  const messages = await db.orderMessage.findMany({
+    where: orderMessageVisibilityWhere(params.id, 'RESEARCHER'),
+    include: { user: { select: { name: true, role: true } } },
+    orderBy: { createdAt: 'asc' },
+  })
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -68,7 +74,7 @@ export default async function ResearcherOrderDetailPage({ params }: { params: { 
               </div>
             </div>
           )}
-          <OrderMessages orderId={order.id} initialMessages={order.messages as any} userRole="RESEARCHER" currentUserId={user.id}/>
+          <OrderMessages orderId={order.id} initialMessages={messages as any} userRole="RESEARCHER" currentUserId={user.id}/>
         </div>
         <div className="space-y-5">
           <DeliverWork orderId={order.id}/>

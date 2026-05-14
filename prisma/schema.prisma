@@ -59,6 +59,10 @@ model User {
   role          Role      @default(CLIENT)
   organization  String?
   phone         String?
+  /// Optional bank details for staff payouts (typically researchers).
+  payoutBankName       String?
+  payoutAccountNumber  String?
+  payoutAccountHolder  String?
   /// When true, client may download watermarked copies while installment final payment is pending (default: site-only preview).
   allowWatermarkedDeliverableDownload Boolean @default(false)
   createdAt     DateTime  @default(now())
@@ -143,6 +147,18 @@ model Project {
   dueDate     DateTime?
   budget      Float?
   clientId    String
+  /// Share of collected revenue (paid invoices) for researchers on this project. Null = platform default.
+  researcherSharePercent Int?
+  /// Share of **remainder after researcher pool** for website / ops (not % of gross collected). Null = platform default (e.g. 15).
+  websiteOpsSharePercent Int?
+  researcherPayoutInitiatedAt DateTime?
+  opsPayoutInitiatedAt         DateTime?
+  researcherPayoutTotalRecorded Float?
+  researcherPayoutPaidAt       DateTime?
+  researcherPayoutNote         String?   @db.Text
+  opsPayoutTotalRecorded        Float?
+  opsPayoutPaidAt               DateTime?
+  opsPayoutNote                 String?   @db.Text
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -275,6 +291,12 @@ enum DeliveryMethod {
   BOTH
 }
 
+/// Who may read a non-internal order message: client+admin vs researcher+admin (strict separation).
+enum OrderMessageAudience {
+  CLIENT_ADMIN
+  RESEARCHER_ADMIN
+}
+
 model Order {
   id               String        @id @default(cuid())
   orderNumber      String        @unique
@@ -295,6 +317,16 @@ model Order {
   reviewedBy       String?
   reviewedAt       DateTime?
   deliveredAt      DateTime?
+  /// Share of order budget for researcher (1–100). Null = use platform default in AppSettings.
+  researcherSharePercent Int?
+  /// Amount actually paid to researcher (recorded by admin/finance).
+  researcherPaidAmount   Float?
+  researcherPaidAt       DateTime?
+  researcherPayoutNote    String?   @db.Text
+  /// Platform / website-ops or other internal payout recorded on this order.
+  opsPayoutAmount   Float?
+  opsPaidAt         DateTime?
+  opsPayoutNote     String?   @db.Text
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -306,6 +338,19 @@ model Order {
   deliverables     Deliverable[]
   messages         OrderMessage[]
   timeline         OrderTimeline[]
+}
+
+/// Single-row platform settings (id is always `global`).
+model AppSettings {
+  id                           String   @id
+  defaultResearcherSharePercent Int     @default(40)
+  /// % of remainder after researcher pool (not % of gross collected).
+  defaultWebsiteOpsSharePercent Int     @default(15)
+  websitePayoutBankName         String?
+  websitePayoutAccountNumber    String?
+  websitePayoutAccountHolder    String?
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
 }
 
 model OrderBrief {
@@ -339,6 +384,7 @@ model OrderMessage {
   userId     String
   message    String    @db.Text
   isInternal Boolean   @default(false)
+  audience   OrderMessageAudience @default(CLIENT_ADMIN)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   editedAt   DateTime?

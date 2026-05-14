@@ -63,7 +63,12 @@ export default async function FinanceDashboard() {
           <div className="rounded-2xl border p-5" style={{background:'var(--card-bg)',borderColor:'var(--card-border)'}}>
             <h2 className="font-semibold text-[.93rem] mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {[['Create Invoice','#'],['Send Reminder','#'],['Export CSV','#'],['Revenue Report','#']].map(([l,h])=>(
+              {[
+                ['Staff payouts', '/dashboard/finance/payouts'],
+                ['Invoices', '/dashboard/finance/invoices'],
+                ['Payments', '/dashboard/finance/payments'],
+                ['Revenue', '/dashboard/finance/revenue'],
+              ].map(([l, h]) => (
                 <a key={l} href={h} className="p-3 rounded-xl text-center text-[.78rem] font-medium border transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]" style={{background:'rgba(255,255,255,.03)',borderColor:'var(--card-border)',color:'var(--muted)'}}>{l}</a>
               ))}
             </div>

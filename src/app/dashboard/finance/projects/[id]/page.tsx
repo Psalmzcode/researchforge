@@ -4,23 +4,20 @@ import Link from 'next/link'
 import { db } from '@/lib/db'
 import { StatusBadge } from '@/components/dashboard/StatusBadge'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { AdminProjectBilling, type InvoiceRow, type QuoteRow } from '@/components/dashboard/AdminProjectBilling'
 import { ProjectPayoutPanel } from '@/components/dashboard/ProjectPayoutPanel'
 import { getProjectCollectedRevenue } from '@/lib/project-collected-revenue'
 import { ensureAppSettings, getDefaultResearcherSharePercent, getDefaultWebsiteOpsSharePercent } from '@/lib/app-settings'
 import { computeProjectPayoutPreview } from '@/lib/project-payout-math'
 import { buildResearcherPayeeRows } from '@/lib/researcher-payout-payees'
 
-export default async function AdminProjectDetailPage({ params }: { params: { id: string } }) {
+export default async function FinanceProjectPayoutPage({ params }: { params: { id: string } }) {
   const session = await auth()
-  if (!session || (session.user as any).role !== 'ADMIN') redirect('/login')
+  if (!session || !['FINANCE', 'ADMIN'].includes((session.user as any).role)) redirect('/login')
 
   const project = await db.project.findUnique({
     where: { id: params.id },
     include: {
       client: { select: { name: true, organization: true, email: true } },
-      quotes: { orderBy: { createdAt: 'desc' } },
-      invoices: { orderBy: { createdAt: 'desc' } },
       assignments: {
         where: { user: { role: 'RESEARCHER' } },
         include: {
@@ -47,28 +44,6 @@ export default async function AdminProjectDetailPage({ params }: { params: { id:
     getDefaultWebsiteOpsSharePercent(),
     ensureAppSettings(),
   ])
-
-  const quotes: QuoteRow[] = project.quotes.map((q) => ({
-    id: q.id,
-    amount: q.amount,
-    description: q.description,
-    paymentType: q.paymentType,
-    approved: q.approved,
-    approvedAt: q.approvedAt?.toISOString() ?? null,
-    createdAt: q.createdAt.toISOString(),
-    validUntil: q.validUntil?.toISOString() ?? null,
-  }))
-
-  const invoices: InvoiceRow[] = project.invoices.map((i) => ({
-    id: i.id,
-    number: i.number,
-    amount: i.amount,
-    amountPaid: i.amountPaid,
-    status: i.status,
-    paymentType: i.paymentType,
-    dueDate: i.dueDate?.toISOString() ?? null,
-    quoteId: i.quoteId,
-  }))
 
   const p = project as typeof project & {
     researcherSharePercent?: number | null
@@ -121,38 +96,24 @@ export default async function AdminProjectDetailPage({ params }: { params: { id:
   }))
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <Link href="/dashboard/admin/projects" className="text-xs" style={{ color: 'var(--muted)' }}>
-          ← All projects
+        <Link href="/dashboard/finance/payouts" className="text-xs" style={{ color: 'var(--muted)' }}>
+          ← Staff payouts
         </Link>
         <h1 className="font-serif text-2xl font-bold mt-1">{project.title}</h1>
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
+        <div className="flex flex-wrap items-center gap-3 mt-2 text-sm">
           <StatusBadge status={project.status} />
           <span className="text-xs" style={{ color: 'var(--muted)' }}>
-            {project.service.replace('_', ' ')}
+            Client: {project.client.organization || project.client.name}
           </span>
-          {project.dueDate && (
-            <span className="text-xs" style={{ color: 'var(--muted)' }}>
-              Due {formatDate(project.dueDate)}
-            </span>
-          )}
-          {project.budget != null && (
-            <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-              Budget {formatCurrency(project.budget)} (planning only)
-            </span>
-          )}
           <span className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-            Collected {formatCurrency(collected)} (paid invoices)
+            Collected {formatCurrency(collected)}
           </span>
         </div>
-        <p className="text-xs mt-3" style={{ color: 'var(--muted)' }}>
-          Client:{' '}
-          <strong>{project.client.organization || project.client.name}</strong> ({project.client.email})
-        </p>
-        {project.description && (
-          <p className="text-sm mt-3 leading-relaxed border-t pt-3" style={{ borderColor: 'var(--card-border)' }}>
-            {project.description}
+        {project.dueDate && (
+          <p className="text-xs mt-2" style={{ color: 'var(--muted)' }}>
+            Due {formatDate(project.dueDate)}
           </p>
         )}
       </div>
@@ -168,8 +129,6 @@ export default async function AdminProjectDetailPage({ params }: { params: { id:
         researcherPayeeRows={researcherPayeeRows}
         websitePayoutRecipient={websitePayoutRecipient}
       />
-
-      <AdminProjectBilling projectId={project.id} initialQuotes={quotes} initialInvoices={invoices} />
     </div>
   )
 }
