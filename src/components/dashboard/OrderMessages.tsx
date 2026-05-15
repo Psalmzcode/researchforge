@@ -301,13 +301,13 @@ export function OrderMessages({
                   {menuOpenForId === m.id && (
                     <div
                       className="absolute right-0 top-full mt-1 z-20 min-w-[7.5rem] rounded-lg border py-1 text-left shadow-lg"
-                      style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+                      style={{ background: 'var(--surface-elevated)', borderColor: 'var(--card-border)' }}
                     >
                       {canEdit(m) && (
                         <button
                           type="button"
                           onClick={() => startEdit(m)}
-                          className="block w-full px-3 py-2 text-left text-xs font-medium hover:bg-[rgba(255,255,255,.06)]"
+                          className="block w-full px-3 py-2 text-left text-xs font-medium hover:bg-[rgba(255,255,255,.08)]"
                           style={{ color: 'var(--text)' }}
                         >
                           Edit

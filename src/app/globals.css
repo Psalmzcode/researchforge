@@ -5,6 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 
 :root {
+  color-scheme: dark;
   --navy: #0a1628;
   --navy-mid: #112240;
   --accent: #00c6a2;
@@ -15,6 +16,9 @@
   --card-bg: rgba(255,255,255,0.04);
   --card-border: rgba(255,255,255,0.08);
   --alt: #0d1e3a;
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --select-option-bg: #112240;
+  --select-option-color: #e8eaf0;
   /* Surfaces that must track theme (avoid hardcoded rgba in components) */
   --nav-bg: rgba(10, 22, 40, 0.75);
   --nav-bg-scrolled: rgba(10, 22, 40, 0.97);
@@ -27,6 +31,7 @@
 }
 
 html.light {
+  color-scheme: light;
   --navy: #f0f4f8;
   --navy-mid: #e2e8f0;
   --accent: #00a885;
@@ -37,6 +42,9 @@ html.light {
   --card-bg: rgba(0,0,0,0.03);
   --card-border: rgba(0,0,0,0.1);
   --alt: #e8edf4;
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --select-option-bg: #ffffff;
+  --select-option-color: #1a202c;
   --nav-bg: rgba(255, 255, 255, 0.82);
   --nav-bg-scrolled: rgba(255, 255, 255, 0.94);
   --nav-drawer-bg: rgba(248, 250, 252, 0.98);
@@ -60,4 +68,27 @@ body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--t
 /* Above fixed navbar (z-[1000]) */
 [data-sonner-toaster] {
   z-index: 1100 !important;
+}
+
+/* Native <select> — closed control + open list (browser popup) */
+select {
+  color-scheme: inherit;
+  background-color: var(--input-bg);
+  color: var(--text);
+  border-color: var(--card-border);
+}
+
+select option {
+  background-color: var(--select-option-bg);
+  color: var(--select-option-color);
+}
+
+select option:checked,
+select option:hover {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+
+select option:disabled {
+  color: var(--muted);
 }
