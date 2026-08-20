@@ -1,12 +1,15 @@
-import type { Metadata } from 'next'
 import './globals.css'
 import { SessionProvider } from '@/components/layout/SessionProvider'
 import { auth } from '@/lib/auth'
 import { ThemeScript } from '@/components/layout/ThemeScript'
 
-export const metadata: Metadata = {
-  title: 'ResearchForge Consulting',
-  description: 'Data-Driven Research, Strategy & Sustainable Solutions',
+export const metadata = {
+  title: 'Researchforge — Turning African evidence into decisions that work.',
+  description: 'Researchforge generates field-based data, research and intelligence that help governments, investors, development organizations and businesses design, finance and scale sustainable solutions across Africa.',
+  icons: {
+    icon: '/researchforge-logo.png',
+    apple: '/researchforge-logo.png',
+  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
