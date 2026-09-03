@@ -365,6 +365,34 @@ nav.links a:hover::after{width:100%;}
 }
 .f-card h3{font-size:1.24rem; font-weight:500; color:#fff; max-width:20ch;}
 
+/* -------- reach (where we work) -------- */
+.reach{padding:120px 0; background:var(--paper);}
+.reach .eyebrow{color:var(--terracotta-deep);}
+.reach .eyebrow::before{background:var(--terracotta);}
+.reach .section-head h2{color:var(--ink);}
+.reach .section-head p{color:var(--ink-soft);}
+.reach-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
+}
+@media (max-width:860px){ .reach-grid{grid-template-columns:1fr; gap:40px;} }
+.reach-photo{
+  border-radius:var(--radius); overflow:hidden; aspect-ratio:680/500;
+  box-shadow:var(--shadow);
+}
+.reach-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+.reach-map{display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.reach-map svg{display:block; width:100%; height:auto;}
+.reach-caption{
+  margin-top:18px; font-family:'IBM Plex Mono',monospace; font-size:0.72rem;
+  letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); text-align:center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .m3-sweep{ animation:m3sweep 4.5s ease-in-out infinite; }
+  .m3-breathe{ animation:m3breathe 4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+}
+@keyframes m3sweep{ 0%{ transform:translateX(-180px);} 100%{ transform:translateX(520px);} }
+@keyframes m3breathe{ 0%,100%{ opacity:1; } 50%{ opacity:.9; } }
+
 /* -------- team -------- */
 .team{padding:20px 0 130px;}
 .team-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}

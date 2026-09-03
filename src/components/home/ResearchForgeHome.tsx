@@ -4,11 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { HeroSlider } from './HeroSlider'
 import { FounderSpotlight } from './FounderSpotlight'
+import { WhereWeWork } from './WhereWeWork'
 
 const IMG = {
   field: 'https://images.unsplash.com/photo-1596788068873-9ffd5cacd4c4?auto=format&fit=crop&w=900&q=80',
   landscape: 'https://images.unsplash.com/photo-1592650938062-c4cc6ab48951?auto=format&fit=crop&w=900&q=80',
-  community: 'https://images.unsplash.com/photo-1645480064897-4e4755b75144?auto=format&fit=crop&w=900&q=80',
+  community: '/approach/impact.png',
   agriculture: 'https://images.unsplash.com/photo-1509099381441-ea3c0cf98b94?auto=format&fit=crop&w=900&q=80',
   solar: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=80',
   climate: 'https://images.unsplash.com/photo-1569103470379-7a55ae911d86?auto=format&fit=crop&w=900&q=80',
@@ -23,8 +24,6 @@ const NAV_LINKS = [
   { href: '#about', label: 'About' },
   { href: '#focus', label: 'Focus Areas' },
   { href: '#team', label: 'Team' },
-  { href: '#pathway', label: 'Approach' },
-  { href: '#research', label: 'Research' },
   { href: '#projects', label: 'Projects' },
   { href: '#contact', label: 'Contact' },
 ]
@@ -158,7 +157,7 @@ export function ResearchForgeHome() {
               </div>
             </div>
             <div className="a-card reveal">
-              <div className="a-img"><img src={IMG.community} alt="Community members and researchers in a collaborative session" /></div>
+              <div className="a-img"><img src={IMG.community} alt="Rural hillside settlement, representing impact and project intelligence" /></div>
               <div className="a-body">
                 <div className="a-num">03 / Impact &amp; Project Intelligence</div>
                 <h3>Impact &amp; Project Intelligence</h3>
@@ -188,6 +187,8 @@ export function ResearchForgeHome() {
           </div>
         </div>
       </section>
+
+      <WhereWeWork />
 
       <section className="team" id="team">
         <div className="wrap">

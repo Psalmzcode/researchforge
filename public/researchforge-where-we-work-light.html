@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Researchforge — Where We Work (section extract, light variant)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); font-family:'Inter',sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased;}
+  img{max-width:100%; display:block;}
+  h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink);}
+
+  :root{
+    /* Researchforge brand: deep forest green (dominant, ~90%) + bright
+       leaf green (secondary) + a lime highlight used sparingly (~10%),
+       taken directly from the Research Forge logo/letterhead. */
+    --paper:#F8F6EE;
+    --paper-deep:#EFEADA;
+    --ink:#16231C;
+    --ink-soft:#48513F;
+    --olive:#2E7A48;        /* mid forest green — labels, links, tags */
+    --olive-deep:#1C4A2C;   /* deep forest green — dark sections */
+    --olive-line:#D8E0CE;
+    --terracotta:#2FAE58;   /* bright brand green — primary CTA / accent */
+    --terracotta-deep:#1C7A3C;
+    --lime:#D8E368;         /* lime highlight — used sparingly, ~10% */
+    --data:#3B6152;
+    --line:rgba(22,35,28,0.14);
+    --line-soft:rgba(22,35,28,0.08);
+    --shadow:0 18px 40px -22px rgba(22,35,28,0.35);
+    --radius:6px;
+    --maxw:1240px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--terracotta-deep);
+    display:flex;
+    align-items:center;
+    gap:0.6em;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--terracotta);
+    display:inline-block;
+  }
+
+
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
+    margin-bottom:52px; flex-wrap:wrap;
+  }
+  .section-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem); font-weight:400; margin-top:14px; max-width:20ch;}
+  .section-head p{color:var(--ink-soft); max-width:38ch; font-size:0.98rem;}
+
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    html{scroll-behavior:auto;}
+  }
+
+  
+  /* -------- reach (map + community photo) — LIGHT variant -------- */
+  .reach{padding:120px 0; background:var(--paper);}
+  .reach .eyebrow{color:var(--terracotta-deep);}
+  .reach .eyebrow::before{background:var(--terracotta);}
+  .reach .section-head h2{color:var(--ink);}
+  .reach .section-head p{color:var(--ink-soft);}
+  .reach-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
+  }
+  @media (max-width:860px){ .reach-grid{grid-template-columns:1fr; gap:40px;} }
+  .reach-photo{
+    border-radius:var(--radius); overflow:hidden; aspect-ratio:680/500;
+    box-shadow:var(--shadow);
+  }
+  .reach-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .reach-map{display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .reach-map svg{display:block; width:100%; height:auto;}
+  .reach-caption{
+    margin-top:18px; font-family:'IBM Plex Mono',monospace; font-size:0.72rem;
+    letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); text-align:center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .m3-sweep{ animation:m3sweep 4.5s ease-in-out infinite; }
+    .m3-breathe{ animation:m3breathe 4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  }
+  @keyframes m3sweep{ 0%{ transform:translateX(-180px);} 100%{ transform:translateX(520px);} }
+  @keyframes m3breathe{ 0%,100%{ opacity:1; } 50%{ opacity:.9; } }
+
+</style>
+</head>
+<body>
+
+<section class="reach" id="reach">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Where we work</div>
+        <h2>Field presence across the continent.</h2>
+      </div>
+      <p>Researchforge works directly in the communities its evidence is drawn from — not from a distance.</p>
+    </div>
+
+    <div class="reach-grid reveal">
+      <div class="reach-photo">
+        <img src="https://images.unsplash.com/photo-1747889268735-31192c2a6df4?auto=format&fit=crop&w=1000&q=80" alt="People working together in a small rural African village">
+      </div>
+      <div class="reach-map">
+        <svg viewBox="0 0 680 500" role="img" aria-label="Animated map of Africa with a textured data surface and a slow light sweep">
+          <defs>
+            <clipPath id="reachClip"><path d="M310,50 L395,58 L450,90 L462,145 L498,195 L466,225 L452,270 L432,320 L408,375 L392,420 L345,468 L300,462 L268,430 L245,388 L222,340 L210,295 L232,272 L258,256 L238,236 L205,232 L175,222 L152,198 L146,165 L168,118 L210,80 L260,58 Z"/></clipPath>
+            <pattern id="reachDots" width="13" height="13" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="var(--terracotta)" opacity="0.55"/>
+            </pattern>
+            <linearGradient id="reachSweep" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="var(--lime)" stop-opacity="0"/>
+              <stop offset="50%" stop-color="var(--lime)" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="var(--lime)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path class="m3-breathe" d="M310,50 L395,58 L450,90 L462,145 L498,195 L466,225 L452,270 L432,320 L408,375 L392,420 L345,468 L300,462 L268,430 L245,388 L222,340 L210,295 L232,272 L258,256 L238,236 L205,232 L175,222 L152,198 L146,165 L168,118 L210,80 L260,58 Z" fill="var(--olive-deep)" stroke="var(--olive)" stroke-width="1"/>
+          <g clip-path="url(#reachClip)">
+            <rect x="120" y="30" width="400" height="460" fill="url(#reachDots)"/>
+            <rect class="m3-sweep" x="0" y="30" width="160" height="460" fill="url(#reachSweep)"/>
+          </g>
+        </svg>
+        <div class="reach-caption">Field-first, evidence-led, present on the ground</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
+    },{threshold:0.12});
+    revealEls.forEach(el=>io.observe(el));
+  } else {
+    revealEls.forEach(el=>el.classList.add('in-view'));
+  }
+</script>
+
+</body>
+</html>
