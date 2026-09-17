@@ -7,7 +7,7 @@ export function WhereWeWork() {
             <div className="eyebrow">Where we work</div>
             <h2>Field presence across the continent.</h2>
           </div>
-          <p>Researchforge works directly in the communities its evidence is drawn from — not from a distance.</p>
+          <p>ResearchForge works directly in the communities its evidence is drawn from — not from a distance.</p>
         </div>
 
         <div className="reach-grid reveal">

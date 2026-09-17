@@ -11,7 +11,7 @@ const SLIDES = [
     alt: 'Wide African savanna landscape at golden hour',
     eyebrow: 'Data · Research · Intelligence',
     title: <>Turning African evidence into <em>decisions</em> that work.</>,
-    lede: 'Researchforge generates field-based data, research and intelligence that help governments, investors, development organizations and businesses design, finance and scale sustainable solutions across Africa.',
+    lede: 'ResearchForge generates field-based data, research and intelligence that help governments, investors, development organizations and businesses design, finance and scale sustainable solutions across Africa.',
     primary: { href: '#projects', label: 'Explore our work' },
     secondary: { href: '#contact', label: 'Partner with us' },
   },
@@ -80,7 +80,7 @@ export function HeroSlider() {
       className="hero-slider"
       id="top"
       aria-roledescription="carousel"
-      aria-label="Researchforge introduction"
+      aria-label="ResearchForge introduction"
     >
       <div className="hero-track">
         {SLIDES.map((slide, idx) => (
