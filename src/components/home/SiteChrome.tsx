@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { ContactModalProvider, ContactTrigger } from './ContactModal'
 
 const NAV_LINKS = [
   { href: '/about', label: 'About' },
@@ -40,9 +41,9 @@ export function SiteHeader({ active }: { active?: string }) {
             </Link>
           ))}
         </nav>
-        <Link href="/#contact" className="btn btn-solid nav-cta" onClick={() => setMenuOpen(false)}>
+        <ContactTrigger className="btn btn-solid nav-cta" >
           Partner with us
-        </Link>
+        </ContactTrigger>
         <button type="button" className="menu-toggle" aria-label="Menu" onClick={() => setMenuOpen(v => !v)}>
           &#9776;
         </button>
@@ -82,7 +83,11 @@ export function SiteFooter() {
             <h5>Contact</h5>
             <ul>
               <li><a href="mailto:researchforgeconsulting@gmail.com">researchforgeconsulting@gmail.com</a></li>
-              <li><Link href="/#contact">Partner with us</Link></li>
+              <li>
+                <ContactTrigger className="rf-text-button">
+                  Partner with us
+                </ContactTrigger>
+              </li>
             </ul>
           </div>
         </div>
@@ -92,6 +97,24 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+  )
+}
+
+export function SiteShell({
+  children,
+  active,
+}: {
+  children: React.ReactNode
+  active?: string
+}) {
+  return (
+    <ContactModalProvider>
+      <div className="rf-site">
+        <SiteHeader active={active} />
+        {children}
+        <SiteFooter />
+      </div>
+    </ContactModalProvider>
   )
 }
 

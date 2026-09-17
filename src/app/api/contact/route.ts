@@ -1,24 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { parseJsonBody } from '@/lib/api-error'
+import { sendContactInquiry } from '@/lib/email'
 
 const schema = z.object({
-  name: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().min(2, 'Name must be at least 2 characters.')),
-  organization: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().optional()),
-  email: z.preprocess((v) => (typeof v === 'string' ? v.trim().toLowerCase() : v), z.string().email('Enter a valid email address.')),
-  service: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().optional()),
-  message: z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), z.string().min(10, 'Message must be at least 10 characters.')),
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(200),
+  organisation: z.string().trim().max(200).optional().or(z.literal('')),
+  purpose: z.string().trim().min(10).max(4000),
 })
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const parsed = parseJsonBody(schema, body)
-    if (!parsed.ok) return parsed.response
-    await db.contactRequest.create({ data: parsed.data })
+    const parsed = schema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Please check your details and try again.' }, { status: 400 })
+    }
+
+    const { name, email, organisation, purpose } = parsed.data
+    await sendContactInquiry({
+      name,
+      email,
+      organisation: organisation?.trim() || undefined,
+      purpose,
+    })
+
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: 'Could not save your message. Try again later.' }, { status: 500 })
+  } catch (error) {
+    console.error('[contact]', error)
+    return NextResponse.json({ error: 'Could not send your message. Please try again.' }, { status: 500 })
   }
 }

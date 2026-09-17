@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { SiteFooter, SiteHeader } from '@/components/home/SiteChrome'
+import { SiteShell } from '@/components/home/SiteChrome'
+import { ContactTrigger } from '@/components/home/ContactModal'
 import { getAllProjectSlugs, getProject, PROJECTS } from '@/data/projects'
 import '../../researchforge.css'
 
@@ -24,9 +25,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
   const others = PROJECTS.filter(p => p.slug !== project.slug).slice(0, 2)
 
   return (
-    <div className="rf-site">
-      <SiteHeader />
-
+    <SiteShell>
       <article className="project-detail">
         <div className="project-detail-hero">
           <img src={project.image} alt={project.imageAlt} />
@@ -54,7 +53,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           </div>
 
           <div className="project-detail-cta">
-            <Link href="/#contact" className="btn btn-solid">Partner with us</Link>
+            <ContactTrigger className="btn btn-solid">Partner with us</ContactTrigger>
             <Link href="/#projects" className="btn btn-outline">Back to projects</Link>
           </div>
         </div>
@@ -76,8 +75,6 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           </div>
         )}
       </article>
-
-      <SiteFooter />
-    </div>
+    </SiteShell>
   )
 }

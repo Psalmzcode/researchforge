@@ -6,6 +6,7 @@ import { HeroSlider } from './HeroSlider'
 import { FounderSpotlight } from './FounderSpotlight'
 import { WhereWeWork } from './WhereWeWork'
 import { SiteFooter, SiteHeader } from './SiteChrome'
+import { ContactModalProvider, ContactTrigger } from './ContactModal'
 import { PROJECTS } from '@/data/projects'
 
 const IMG = {
@@ -49,6 +50,7 @@ export function ResearchForgeHome() {
   const [researchFilter, setResearchFilter] = useState<string>('All')
 
   return (
+    <ContactModalProvider>
     <div className="rf-site">
       <SiteHeader />
 
@@ -239,7 +241,7 @@ export function ResearchForgeHome() {
             <span>Fund innovation</span>
           </div>
           <div className="cta-actions">
-            <a href="mailto:researchforgeconsulting@gmail.com" className="btn btn-solid">Start a conversation</a>
+            <ContactTrigger className="btn btn-solid">Start a conversation</ContactTrigger>
             <a href="#projects" className="btn btn-ghost">See our projects</a>
           </div>
         </div>
@@ -247,5 +249,6 @@ export function ResearchForgeHome() {
 
       <SiteFooter />
     </div>
+    </ContactModalProvider>
   )
 }

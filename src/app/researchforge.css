@@ -666,3 +666,81 @@ footer{background:var(--ink); color:rgba(246,241,230,0.7); padding:80px 0 30px;}
 .about-cta p{margin-top:16px; color:var(--ink-soft); max-width:42ch;}
 nav.links a.is-current{color:var(--ink);}
 
+/* -------- contact modal -------- */
+.rf-text-button{
+  background:none; border:0; padding:0; margin:0; font:inherit; color:inherit;
+  cursor:pointer; text-align:left; transition:color .2s var(--ease);
+}
+.rf-text-button:hover{color:var(--terracotta);}
+
+.rf-modal-root{
+  position:fixed; inset:0; z-index:400;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px 16px;
+}
+.rf-modal-backdrop{
+  position:absolute; inset:0; border:0; padding:0; margin:0;
+  background:rgba(22,35,28,0.55); cursor:pointer;
+}
+.rf-modal{
+  position:relative; z-index:1;
+  width:min(560px, 100%);
+  max-height:min(90vh, 760px);
+  overflow:auto;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:28px 28px 24px;
+}
+.rf-modal-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  margin-bottom:22px;
+}
+.rf-modal-head h2{
+  font-size:clamp(1.55rem, 3vw, 1.95rem); margin-top:8px; font-weight:500; max-width:16ch;
+}
+.rf-modal-close{
+  flex-shrink:0; width:36px; height:36px; border:1px solid var(--line);
+  background:transparent; border-radius:var(--radius); cursor:pointer;
+  font-size:1.4rem; line-height:1; color:var(--ink-soft);
+  transition:background .2s var(--ease), color .2s var(--ease);
+}
+.rf-modal-close:hover:not(:disabled){background:var(--paper-deep); color:var(--ink);}
+.rf-modal-close:disabled{opacity:0.5; cursor:not-allowed;}
+
+.rf-modal-form{display:flex; flex-direction:column; gap:16px;}
+.rf-modal-form label{display:flex; flex-direction:column; gap:7px;}
+.rf-modal-form label > span{
+  font-family:'IBM Plex Mono',monospace; font-size:0.7rem; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--ink-soft);
+}
+.rf-modal-form label > span em{font-style:normal; text-transform:none; letter-spacing:0; opacity:0.7;}
+.rf-modal-form input,
+.rf-modal-form textarea{
+  width:100%; font:inherit; font-size:0.95rem; color:var(--ink);
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+  padding:12px 14px; outline:none; transition:border-color .2s var(--ease);
+  resize:vertical;
+}
+.rf-modal-form input:focus,
+.rf-modal-form textarea:focus{border-color:var(--terracotta);}
+.rf-modal-form textarea{min-height:120px;}
+.rf-modal-error{
+  margin:0; font-size:0.9rem; color:#9b2c2c;
+  background:rgba(155,44,44,0.08); border:1px solid rgba(155,44,44,0.2);
+  border-radius:var(--radius); padding:10px 12px;
+}
+.rf-modal-actions{
+  display:flex; justify-content:flex-end; gap:12px; flex-wrap:wrap; margin-top:4px;
+}
+.rf-modal-actions .btn:disabled{opacity:0.65; cursor:not-allowed;}
+.rf-modal-success{display:flex; flex-direction:column; gap:22px; align-items:flex-start;}
+.rf-modal-success p{color:var(--ink-soft); font-size:1.02rem; max-width:42ch; line-height:1.65;}
+
+@media (max-width:520px){
+  .rf-modal{padding:22px 18px 18px;}
+  .rf-modal-actions{flex-direction:column-reverse;}
+  .rf-modal-actions .btn{width:100%;}
+}
+

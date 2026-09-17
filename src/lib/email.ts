@@ -67,10 +67,16 @@ function fileLinksHtml(files: FileRef[], label: string): string {
   return `<p style="margin-top:16px;font-size:13px;color:#8892a4;">${escapeHtml(label)}</p><ul style="padding-left:20px;margin:8px 0;">${items}</ul>`
 }
 
-async function send(to: string | string[], subject: string, html: string, attachments?: Attachment[]) {
+async function send(
+  to: string | string[],
+  subject: string,
+  html: string,
+  attachments?: Attachment[],
+  replyTo?: string,
+) {
   if (!RESEND_KEY || RESEND_KEY.startsWith('re_test')) {
     const recipients = Array.isArray(to) ? to.join(', ') : to
-    console.log(`[EMAIL MOCK] To: ${recipients} | Subject: ${subject} | Attachments: ${attachments?.length ?? 0}`)
+    console.log(`[EMAIL MOCK] To: ${recipients} | Subject: ${subject} | Reply-To: ${replyTo ?? '-'} | Attachments: ${attachments?.length ?? 0}`)
     return { ok: true }
   }
   const res = await fetch('https://api.resend.com/emails', {
@@ -81,6 +87,7 @@ async function send(to: string | string[], subject: string, html: string, attach
       to: Array.isArray(to) ? to : [to],
       subject,
       html,
+      ...(replyTo ? { reply_to: replyTo } : {}),
       ...(attachments && attachments.length > 0 ? { attachments } : {}),
     }),
   })
@@ -290,3 +297,41 @@ export async function sendStaffInviteEmail(to: string, name: string | null, role
   `
   return send(to, `You're invited — ResearchForge (${roleLabel})`, emailShell({ title: 'Team invitation', preheader: `Join ResearchForge as ${roleLabel}`, innerHtml: inner }))
 }
+
+export async function sendContactInquiry(input: {
+  name: string
+  email: string
+  organisation?: string
+  purpose: string
+}) {
+  const to = process.env.CONTACT_EMAIL || 'researchforgeconsulting@gmail.com'
+  const rows = [
+    { label: 'Name', value: input.name },
+    { label: 'Email', value: input.email },
+    ...(input.organisation ? [{ label: 'Organisation', value: input.organisation }] : []),
+  ]
+
+  const inner = `
+    ${emailH1('New conversation request')}
+    ${emailP('Someone submitted the Start a conversation form on the ResearchForge website.')}
+    ${emailKeyValueTable(rows)}
+    <div style="padding:16px;background:rgba(255,255,255,.06);border-radius:12px;border:1px solid rgba(255,255,255,.08);margin:16px 0;">
+      <p style="margin:0 0 8px;font-weight:700;color:#fff;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">Purpose</p>
+      <p style="margin:0;font-size:14px;color:#b8c0d4;line-height:1.7;white-space:pre-wrap;">${escapeHtml(input.purpose)}</p>
+    </div>
+    ${emailP('Reply directly to this email to respond to the sender.')}
+  `
+
+  return send(
+    to,
+    `Conversation request — ${input.name}`,
+    emailShell({
+      title: 'Conversation request',
+      preheader: `${input.name} wants to start a conversation`,
+      innerHtml: inner,
+    }),
+    undefined,
+    input.email,
+  )
+}
+

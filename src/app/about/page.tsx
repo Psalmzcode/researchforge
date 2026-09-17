@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { TEAM } from '@/data/team'
-import { SiteFooter, SiteHeader, TeamLinks } from '@/components/home/SiteChrome'
+import { SiteShell, TeamLinks } from '@/components/home/SiteChrome'
+import { ContactTrigger } from '@/components/home/ContactModal'
 import '../researchforge.css'
 
 export const metadata: Metadata = {
@@ -12,9 +13,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="rf-site">
-      <SiteHeader active="/about" />
-
+    <SiteShell active="/about">
       <section className="about-hero">
         <div className="wrap">
           <div className="eyebrow">About ResearchForge</div>
@@ -114,13 +113,11 @@ export default function AboutPage() {
           <h2>Have a problem that needs evidence?</h2>
           <p>Research with us. Commission a study. Partner on a project.</p>
           <div className="cta-actions" style={{ justifyContent: 'flex-start', marginTop: 28 }}>
-            <Link href="/#contact" className="btn btn-solid">Start a conversation</Link>
+            <ContactTrigger className="btn btn-solid">Start a conversation</ContactTrigger>
             <Link href="/#projects" className="btn btn-outline">See our projects</Link>
           </div>
         </div>
       </section>
-
-      <SiteFooter />
-    </div>
+    </SiteShell>
   )
 }
