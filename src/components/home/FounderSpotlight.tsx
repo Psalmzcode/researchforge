@@ -2,7 +2,7 @@ export function FounderSpotlight() {
   return (
     <section className="spotlight" id="founder">
       <div className="wrap">
-        <div className="spotlight-card">
+        <div className="spotlight-card reveal">
           <div className="spotlight-media">
             <img src="/founder/option-silhouette.png" alt="ResearchForge founder silhouette" />
             <div className="spotlight-media-tag">

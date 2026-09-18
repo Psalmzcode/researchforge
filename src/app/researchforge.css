@@ -70,7 +70,40 @@ h1,h2,h3,h4{
 section{position:relative;}
 
 /* -------- reveal -------- */
-.rf-site .reveal{opacity:1; transform:none;}
+@keyframes rfPageIn{
+  from{opacity:0; transform:translateY(12px);}
+  to{opacity:1; transform:none;}
+}
+.rf-site.rf-page-ready{
+  animation:rfPageIn .55s var(--ease) both;
+}
+.reveal{
+  opacity:0;
+  transform:translateY(22px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.reveal.in-view{opacity:1; transform:none;}
+.a-grid .a-card.reveal:nth-child(2){transition-delay:.08s;}
+.a-grid .a-card.reveal:nth-child(3){transition-delay:.16s;}
+.focus-grid .f-card.reveal:nth-child(2){transition-delay:.06s;}
+.focus-grid .f-card.reveal:nth-child(3){transition-delay:.12s;}
+.focus-grid .f-card.reveal:nth-child(4){transition-delay:.18s;}
+.focus-grid .f-card.reveal:nth-child(5){transition-delay:.24s;}
+.focus-grid .f-card.reveal:nth-child(6){transition-delay:.3s;}
+.steps .step.reveal:nth-child(2){transition-delay:.05s;}
+.steps .step.reveal:nth-child(3){transition-delay:.1s;}
+.steps .step.reveal:nth-child(4){transition-delay:.15s;}
+.steps .step.reveal:nth-child(5){transition-delay:.2s;}
+.steps .step.reveal:nth-child(6){transition-delay:.25s;}
+.steps .step.reveal:nth-child(7){transition-delay:.3s;}
+.team-grid .t-card.reveal:nth-child(2){transition-delay:.08s;}
+.team-grid .t-card.reveal:nth-child(3){transition-delay:.16s;}
+.team-grid .t-card.reveal:nth-child(4){transition-delay:.24s;}
+@media (prefers-reduced-motion:reduce){
+  .rf-site.rf-page-ready{animation:none;}
+  .reveal, .reveal.in-view{opacity:1; transform:none; transition:none;}
+  html{scroll-behavior:auto;}
+}
 
 /* -------- nav -------- */
 header.site-nav{

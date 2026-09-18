@@ -15,7 +15,7 @@ export default function AboutPage() {
   return (
     <SiteShell active="/about">
       <section className="about-hero">
-        <div className="wrap">
+        <div className="wrap reveal">
           <div className="eyebrow">About ResearchForge</div>
           <h1>Better decisions begin with better intelligence.</h1>
           <p>
@@ -26,7 +26,7 @@ export default function AboutPage() {
 
       <section className="about-story">
         <div className="wrap">
-          <div className="about-story-grid">
+          <div className="about-story-grid reveal">
             <div>
               <div className="eyebrow">Who we are</div>
               <h2>Evidence rooted in the field, ready for action.</h2>
@@ -48,7 +48,7 @@ export default function AboutPage() {
 
       <section className="about-mv" id="mission">
         <div className="wrap">
-          <div className="section-head">
+          <div className="section-head reveal">
             <div>
               <div className="eyebrow">Purpose</div>
               <h2>Mission &amp; vision.</h2>
@@ -56,7 +56,7 @@ export default function AboutPage() {
             <p>Drafted from how we already work — and the future we are building toward.</p>
           </div>
           <div className="about-mv-grid">
-            <article className="about-mv-card">
+            <article className="about-mv-card reveal">
               <div className="eyebrow">Mission</div>
               <h3>Turn field evidence into intelligence partners can act on.</h3>
               <p>
@@ -66,7 +66,7 @@ export default function AboutPage() {
                 We work directly in the communities our evidence is drawn from — connecting agricultural production, energy systems, resource recovery, and local livelihoods to decisions that hold up in real operating contexts.
               </p>
             </article>
-            <article className="about-mv-card">
+            <article className="about-mv-card reveal">
               <div className="eyebrow">Vision</div>
               <h3>A more productive, resilient, and sustainable Africa — guided by usable evidence.</h3>
               <p>
@@ -82,7 +82,7 @@ export default function AboutPage() {
 
       <section className="team about-team" id="team">
         <div className="wrap">
-          <div className="section-head">
+          <div className="section-head reveal">
             <div>
               <div className="eyebrow">The team</div>
               <h2>The people behind the evidence.</h2>
@@ -91,7 +91,7 @@ export default function AboutPage() {
           </div>
           <div className="team-grid">
             {TEAM.map(({ mono, role, name, bio, image, imageAlt }) => (
-              <div key={mono} className="t-card">
+              <div key={mono} className="t-card reveal">
                 <div className="t-avatar">
                   <img src={image} alt={imageAlt} />
                 </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
       </section>
 
       <section className="about-cta">
-        <div className="wrap">
+        <div className="wrap reveal">
           <div className="eyebrow">Work with us</div>
           <h2>Have a problem that needs evidence?</h2>
           <p>Research with us. Commission a study. Partner on a project.</p>

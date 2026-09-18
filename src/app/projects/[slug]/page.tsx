@@ -41,7 +41,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           </div>
         </div>
 
-        <div className="wrap project-detail-body">
+        <div className="wrap project-detail-body reveal">
           {project.body.map((paragraph, idx) => (
             <div key={idx}>
               <p>{paragraph}</p>
@@ -69,7 +69,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         </div>
 
         {others.length > 0 && (
-          <div className="wrap project-detail-more">
+          <div className="wrap project-detail-more reveal">
             <div className="eyebrow">More projects</div>
             <div className="project-detail-more-grid">
               {others.map(item => (

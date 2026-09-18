@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ContactModalProvider, ContactTrigger } from './ContactModal'
+import { RevealOnScroll } from './RevealOnScroll'
 
 const NAV_LINKS = [
   { href: '/about', label: 'About' },
@@ -110,6 +111,7 @@ export function SiteShell({
   return (
     <ContactModalProvider>
       <div className="rf-site">
+        <RevealOnScroll />
         <SiteHeader active={active} />
         {children}
         <SiteFooter />

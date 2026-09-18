@@ -7,6 +7,7 @@ import { FounderSpotlight } from './FounderSpotlight'
 import { WhereWeWork } from './WhereWeWork'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import { ContactModalProvider, ContactTrigger } from './ContactModal'
+import { RevealOnScroll } from './RevealOnScroll'
 import { PROJECTS } from '@/data/projects'
 
 const IMG = {
@@ -52,6 +53,7 @@ export function ResearchForgeHome() {
   return (
     <ContactModalProvider>
     <div className="rf-site">
+      <RevealOnScroll />
       <SiteHeader />
 
       <HeroSlider />
