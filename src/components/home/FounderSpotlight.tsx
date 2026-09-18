@@ -6,7 +6,7 @@ export function FounderSpotlight() {
           <div className="spotlight-media">
             <img src="/founder/option-silhouette.png" alt="ResearchForge founder silhouette" />
             <div className="spotlight-media-tag">
-              <div className="name">Kolawole Emmanuel Olayinka</div>
+              <div className="name">Emmanuel O. Kolawole</div>
               <div className="role">Founder &amp; Lead Researcher</div>
             </div>
           </div>

@@ -121,9 +121,11 @@ export function SiteShell({
 export function TeamLinks() {
   return (
     <div className="t-links">
-      <a href="mailto:researchforgeconsulting@gmail.com" aria-label="Email">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16v16H4z" /><path d="M4 6l8 7 8-7" /></svg>
-      </a>
+      <ContactTrigger className="t-link-btn" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M4 4h16v16H4z" /><path d="M4 6l8 7 8-7" />
+        </svg>
+      </ContactTrigger>
       <a href="#" aria-label="LinkedIn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 11v5M8 8v.01M12 16v-5M12 11c0-1.5 1-2 2-2s2 .8 2 2v5" /></svg>
       </a>

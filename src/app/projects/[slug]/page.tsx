@@ -43,7 +43,17 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
 
         <div className="wrap project-detail-body">
           {project.body.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
+            <div key={idx}>
+              <p>{paragraph}</p>
+              {project.inlineImage && project.inlineImage.afterParagraph === idx && (
+                <figure className="project-detail-inline">
+                  <img src={project.inlineImage.src} alt={project.inlineImage.alt} />
+                  {project.inlineImage.caption && (
+                    <figcaption>{project.inlineImage.caption}</figcaption>
+                  )}
+                </figure>
+              )}
+            </div>
           ))}
 
           <div className="proj-tags project-detail-tags">

@@ -9,6 +9,13 @@ export type Project = {
   image: string
   imageAlt: string
   body: string[]
+  inlineImage?: {
+    src: string
+    alt: string
+    /** Insert after this body paragraph index (0-based). */
+    afterParagraph: number
+    caption?: string
+  }
 }
 
 export const PROJECTS: Project[] = [
@@ -21,8 +28,8 @@ export const PROJECTS: Project[] = [
     tags: ['Field Intelligence', 'Resource Mapping', 'Productive Use of Energy'],
     excerpt:
       'Agricultural residues can represent significant opportunities for decentralised energy development, but identifying those opportunities requires more than estimating how much agricultural waste a region produces.',
-    image: '/projects/biomass-field.png',
-    imageAlt: 'Young person inspecting crops in a field, representing agricultural biomass fieldwork',
+    image: '/projects/biomass-mound.png',
+    imageAlt: 'People working on a large outdoor mound of agricultural residues, representing biomass resources in North-Central Nigeria',
     body: [
       'Agricultural residues can represent significant opportunities for decentralised energy development, but identifying those opportunities requires more than estimating how much agricultural waste a region produces.',
       'ResearchForge contributed to a biomass feedstock assessment for Mirai Denchi Inc., Japan, examining the availability of rice husk, sawdust, and shea cake across five states in Nigeria’s North-Central region.',
@@ -34,24 +41,24 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    slug: 'biomass-feedstock-potential-cross-river',
-    title: 'Assessing Biomass Feedstock Potential in Cross River State',
+    slug: 'biomass-feedstock-potential-anambra',
+    title: 'Assessing Biomass Feedstock Potential in Anambra State',
     theme: 'Research & Analytics | Agricultural Intelligence | Renewable Energy',
-    region: 'Cross River State',
+    region: 'Anambra State',
     focus: 'Renewable Energy',
     tags: ['Research & Analytics', 'Agricultural Intelligence', 'Renewable Energy'],
     excerpt:
       'Agricultural production creates both economic value and substantial quantities of residues. Understanding how those residues can contribute to cleaner energy systems requires reliable information about their availability and distribution.',
-    image: '/reach/landscape.png',
-    imageAlt: 'Aerial view of tropical plantations and agricultural land in a rural landscape',
+    image: '/projects/biomass-anambra.png',
+    imageAlt: 'Outdoor biomass processing site in Anambra with residue piles, sacks, and workers transporting feedstock',
     body: [
       'Agricultural production creates both economic value and substantial quantities of residues. Understanding how those residues can contribute to cleaner energy systems requires reliable information about their availability and distribution.',
-      'ResearchForge undertook a biomass feedstock assessment covering seven major Local Government Areas in Cross River State, focusing on rice husk, sawdust, and palm-kernel dust.',
+      'ResearchForge undertook a biomass feedstock assessment covering seven major Local Government Areas in Anambra State, focusing on rice husk, sawdust, and palm-kernel dust.',
       'The research sought to understand the relationship between agricultural and processing activities and the availability of residues that could potentially support biomass energy applications. This type of assessment is particularly relevant to decentralised energy planning, where the proximity, consistency, and accessibility of feedstock can strongly influence the practicality of an energy project.',
       'The work demonstrates the importance of connecting agricultural intelligence with energy planning. Production and residue estimates become significantly more useful when they can help answer practical questions: Where are resources concentrated? What quantities may be available? How accessible are they? What competing uses exist? And what energy applications could potentially be matched with them?',
       'At ResearchForge, we view this connection as an important part of productive-use-of-energy intelligence.',
       'The objective is not simply to catalogue agricultural residues, but to understand how resources within local economies may potentially support productive energy systems. Such intelligence can contribute to subsequent feasibility studies, technology selection, project design, and investment assessment.',
-      'The Cross River assessment demonstrates how field research can help reveal opportunities at the intersection of agriculture, energy, and resource efficiency—while recognising that further technical and economic assessment is essential before any specific opportunity can be considered viable.',
+      'The Anambra assessment demonstrates how field research can help reveal opportunities at the intersection of agriculture, energy, and resource efficiency—while recognising that further technical and economic assessment is essential before any specific opportunity can be considered viable.',
     ],
   },
   {
@@ -63,8 +70,14 @@ export const PROJECTS: Project[] = [
     tags: ['Resource Intelligence', 'Circular Economy', 'Waste-to-Energy'],
     excerpt:
       'The growing volume of plastic waste, nylon, and end-of-life tyres presents a significant resource-management challenge, but it also raises an important question: how can difficult waste streams be transformed into useful resources?',
-    image: '/projects/waste-energy.png',
-    imageAlt: 'Wind turbines in an open landscape, representing energy and resource recovery',
+    image: '/projects/waste-plastics-bales.png',
+    imageAlt: 'Stacked bales of compressed plastic bottles at a waste collection and recycling facility',
+    inlineImage: {
+      src: '/projects/waste-tyres-weighing.png',
+      alt: 'Researchers documenting and weighing end-of-life tyres at a scrapyard',
+      afterParagraph: 1,
+      caption: 'Field assessment of end-of-life tyres — weighing and documenting feedstock characteristics.',
+    },
     body: [
       'The growing volume of plastic waste, nylon, and end-of-life tyres presents a significant resource-management challenge, but it also raises an important question: how can difficult waste streams be transformed into useful resources?',
       'As part of a waste-to-energy research project undertaken for ACE-SPED, members of the ResearchForge team were identified to support the project, bringing experience in assessing the potential for oil extraction from waste nylon, plastics, and used tyres in Rivers State.',
@@ -85,8 +98,14 @@ export const PROJECTS: Project[] = [
     tags: ['Productive Use of Energy', 'Field Intelligence', 'Local Economies'],
     excerpt:
       'Productive Use of Energy (PUE) starts with understanding how energy supports real economic activity. In Agor-Illa and Costain, Delta State, work undertaken with A1 Power Technologies provided field-level insight into the energy needs, productive activities, and challenges experienced by local users.',
-    image: '/projects/delta-community.png',
-    imageAlt: 'Rural African hillside settlement representing productive energy users in the field',
+    image: '/projects/delta-energy-field.png',
+    imageAlt: 'Field discussion with community members beside a wooden boat on a Delta State shoreline',
+    inlineImage: {
+      src: '/projects/delta-household-survey.png',
+      alt: 'Field researcher conducting a household interview on a wooden walkway in a riverine community',
+      afterParagraph: 1,
+      caption: 'Household-level field engagement in Agor-Illa and Costain — gathering productive energy needs from the community.',
+    },
     body: [
       'Productive Use of Energy (PUE) starts with understanding how energy supports real economic activity. In Agor-Illa and Costain, Delta State, work undertaken with A1 Power Technologies provided field-level insight into the energy needs, productive activities, and challenges experienced by local users.',
       'The assessment looked beyond energy access to understand how electricity and other energy sources are used for income-generating and productive activities. This distinction is important because the value of an energy intervention is often determined by what users are able to accomplish with the energy available to them.',

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap');
 
 :root{
   /* ResearchForge brand: deep forest green (dominant, ~90%) + bright
@@ -28,8 +28,9 @@ html{scroll-behavior:smooth;}
 .rf-site{
   background:var(--paper);
   color:var(--ink);
-  font-family:'Inter',sans-serif;
-  line-height:1.55;
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:1.05rem;
+  line-height:1.65;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
   min-height:100vh;
@@ -37,6 +38,7 @@ html{scroll-behavior:smooth;}
 img{max-width:100%; display:block;}
 a{color:inherit; text-decoration:none;}
 ul{list-style:none;}
+p{text-align:justify; text-justify:inter-word; hyphens:auto;}
 
 h1,h2,h3,h4{
   font-family:'Fraunces',serif;
@@ -265,27 +267,31 @@ nav.links a:hover::after{width:100%;}
   content:""; position:absolute; inset:0;
   background:linear-gradient(0deg, rgba(10,14,10,0.72) 0%, rgba(10,14,10,0.28) 26%, rgba(10,14,10,0) 48%);
 }
-.spotlight-media-tag .name{font-family:'Inter',sans-serif; font-size:1.15rem; font-weight:700;}
+.spotlight-media-tag .name{font-family:'Fraunces',serif; font-size:1.35rem; font-weight:600; letter-spacing:-0.01em;}
 .spotlight-media-tag .role{
-  font-family:'Inter',sans-serif; font-size:0.86rem; font-weight:600;
-  color:var(--lime); margin-top:4px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:500;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--lime); margin-top:6px;
 }
 .spotlight-body{padding:52px 60px 52px 56px; display:flex; flex-direction:column; justify-content:center;}
 @media (max-width:640px){ .spotlight-body{padding:34px 26px 40px;} }
 .spotlight-body .eyebrow{color:var(--terracotta-deep); font-weight:600;}
 .spotlight-body .eyebrow::before{display:none;}
 .spotlight-quote-mark{
-  font-family:Georgia, serif; font-weight:700; font-size:2.6rem; line-height:0.6; color:var(--olive-line);
-  margin:20px 0 8px;
+  font-family:'Fraunces',serif; font-weight:600; font-size:3.2rem; line-height:0.6; color:var(--olive-line);
+  margin:18px 0 10px;
 }
 .spotlight-body blockquote{
-  font-family:'Inter',sans-serif; font-weight:400; font-size:clamp(1.02rem,1.45vw,1.18rem);
-  line-height:1.68; color:var(--ink);
+  font-family:'Source Serif 4',Georgia,serif; font-weight:400;
+  font-size:clamp(1.08rem,1.55vw,1.28rem);
+  line-height:1.75; color:var(--ink);
+  text-align:justify; text-justify:inter-word; hyphens:auto;
 }
-.spotlight-body blockquote p + p{margin-top:1em;}
+.spotlight-body blockquote p + p{margin-top:1.05em;}
 .spotlight-link{
   margin-top:28px; display:inline-flex; align-items:center; gap:8px;
-  font-family:'Inter',sans-serif; font-size:0.98rem; font-weight:600;
+  font-family:'IBM Plex Mono',monospace; font-size:0.82rem; font-weight:500;
+  letter-spacing:0.04em; text-transform:uppercase;
   color:var(--ink); transition:gap .25s var(--ease);
 }
 .spotlight-link:hover{gap:14px; color:var(--terracotta-deep);}
@@ -424,12 +430,15 @@ nav.links a:hover::after{width:100%;}
 .t-body p{font-size:0.88rem; color:var(--ink-soft); margin-top:10px;}
 
 .t-links{display:flex; gap:10px; margin-top:16px;}
-.t-links a{
+.t-links a,
+.t-links .t-link-btn{
   width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
   display:flex; align-items:center; justify-content:center;
-  color:var(--ink-soft); transition:all .25s var(--ease);
+  color:var(--ink-soft); background:transparent; padding:0; cursor:pointer;
+  transition:all .25s var(--ease);
 }
-.t-links a:hover{background:var(--olive-deep); border-color:var(--olive-deep); color:#fff;}
+.t-links a:hover,
+.t-links .t-link-btn:hover{background:var(--olive-deep); border-color:var(--olive-deep); color:#fff;}
 .t-links svg{width:14px; height:14px;}
 
 /* -------- pathway (signature) -------- */
@@ -565,10 +574,23 @@ nav.links a:hover::after{width:100%;}
   padding:56px 32px 40px; max-width:760px;
 }
 .project-detail-body p{
-  color:var(--ink-soft); font-size:1.05rem; line-height:1.75; margin-bottom:1.15em;
+  color:var(--ink-soft); font-size:1.1rem; line-height:1.8; margin-bottom:1.15em; text-align:justify;
 }
-.project-detail-body p:first-child{
-  color:var(--ink); font-size:1.12rem;
+.project-detail-body > div:first-child > p{
+  color:var(--ink); font-size:1.18rem;
+}
+.project-detail-inline{
+  margin:1.6em 0 2em;
+}
+.project-detail-inline img{
+  width:100%; height:auto; max-height:420px; object-fit:cover;
+  border-radius:var(--radius); border:1px solid var(--line);
+}
+.project-detail-inline figcaption{
+  margin-top:12px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72rem; letter-spacing:0.04em;
+  color:var(--ink-soft); text-align:left; line-height:1.5;
 }
 .project-detail-tags{margin-top:8px;}
 .project-detail-cta{
@@ -663,13 +685,13 @@ footer{background:var(--ink); color:rgba(246,241,230,0.7); padding:80px 0 30px;}
 .about-story-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:48px; align-items:start;}
 @media (max-width:800px){ .about-story-grid{grid-template-columns:1fr; gap:28px;} }
 .about-story h2{font-size:clamp(1.8rem,3vw,2.5rem); margin-top:14px; font-weight:400; max-width:16ch;}
-.about-story-copy p{color:var(--ink-soft); font-size:1.02rem; line-height:1.7; margin-bottom:1em;}
+.about-story-copy p{color:var(--ink-soft); font-size:1.08rem; line-height:1.75; margin-bottom:1em; text-align:justify;}
 .about-mv{padding:40px 0 100px;}
 .about-mv-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
 @media (max-width:800px){ .about-mv-grid{grid-template-columns:1fr;} }
 .about-mv-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:36px 32px;}
 .about-mv-card h3{font-size:1.35rem; margin:16px 0 18px; font-weight:500; max-width:20ch; line-height:1.25;}
-.about-mv-card p{color:var(--ink-soft); font-size:0.98rem; line-height:1.7; margin-bottom:1em;}
+.about-mv-card p{color:var(--ink-soft); font-size:1.05rem; line-height:1.75; margin-bottom:1em; text-align:justify;}
 .about-team{padding:20px 0 100px;}
 .about-cta{padding:80px 0 110px; background:var(--paper-deep);}
 .about-cta h2{font-size:clamp(1.9rem,3.4vw,2.8rem); margin-top:16px; font-weight:400; max-width:16ch;}

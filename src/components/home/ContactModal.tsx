@@ -174,14 +174,16 @@ export function ContactTrigger({
   children,
   className,
   style,
+  'aria-label': ariaLabel,
 }: {
   children: ReactNode
   className?: string
   style?: React.CSSProperties
+  'aria-label'?: string
 }) {
   const { openContact } = useContactModal()
   return (
-    <button type="button" className={className} style={style} onClick={openContact}>
+    <button type="button" className={className} style={style} aria-label={ariaLabel} onClick={openContact}>
       {children}
     </button>
   )
