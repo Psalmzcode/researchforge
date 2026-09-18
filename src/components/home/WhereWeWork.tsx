@@ -7,7 +7,6 @@ export function WhereWeWork() {
             <div className="eyebrow">Where we work</div>
             <h2>Field presence across the continent.</h2>
           </div>
-          <p>ResearchForge works directly in the communities its evidence is drawn from — not from a distance.</p>
         </div>
 
         <div className="reach-grid reveal">
@@ -15,6 +14,9 @@ export function WhereWeWork() {
             <img src="/reach/landscape.png" alt="Aerial view of agricultural land, plantations and rural settlement" />
           </div>
           <div className="reach-map">
+            <p className="reach-lede">
+              ResearchForge works directly in the communities its evidence is drawn from — not from a distance.
+            </p>
             <svg viewBox="0 0 680 500" role="img" aria-label="Animated map of Africa with a textured data surface and a slow light sweep">
               <defs>
                 <clipPath id="reachClip">
