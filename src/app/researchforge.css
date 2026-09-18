@@ -316,11 +316,14 @@ nav.links a:hover::after{width:100%;}
 }
 .spotlight-body blockquote{
   font-family:'Source Serif 4',Georgia,serif; font-weight:400;
-  font-size:clamp(1.08rem,1.55vw,1.28rem);
-  line-height:1.75; color:var(--ink);
+  font-size:0.96rem;
+  line-height:1.65; color:var(--ink);
   text-align:justify; text-justify:inter-word; hyphens:auto;
 }
-.spotlight-body blockquote p + p{margin-top:1.05em;}
+.spotlight-body blockquote p + p{margin-top:0.85em;}
+@media (max-width:860px){
+  .spotlight-media{min-height:360px;}
+}
 .spotlight-link{
   margin-top:28px; display:inline-flex; align-items:center; gap:8px;
   font-family:'IBM Plex Mono',monospace; font-size:0.82rem; font-weight:500;
