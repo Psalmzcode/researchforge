@@ -57,7 +57,7 @@ export function SiteFooter() {
     <footer>
       <div className="wrap">
         <div className="foot-grid">
-          <div>
+          <div className="foot-brand">
             <div className="foot-logo"><BrandLogo /></div>
             <p>Turning African evidence into decisions that work — field-based data, research and intelligence for governments, investors, development organizations and businesses.</p>
           </div>
