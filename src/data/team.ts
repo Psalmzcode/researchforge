@@ -2,7 +2,8 @@ export const TEAM = [
   {
     mono: 'E.O.K.',
     role: 'Founder & Lead Researcher',
-    name: 'Emmanuel O. Kolawole',
+    // name: 'Emmanuel O. Kolawole',
+    name: '****',
     bio: 'Founder of ResearchForge. Leads research design and field intelligence work that helps governments, investors, and development partners make better decisions across Africa.',
     image: '/team/male-1.png',
     imageAlt: 'Silhouette of ResearchForge founder',
@@ -10,7 +11,8 @@ export const TEAM = [
   {
     mono: 'S.C.A.',
     role: 'Platform & Technology Lead',
-    name: 'Samuel C. Ali',
+    // name: 'Samuel C. Ali',
+    name: '****',
     bio: 'Leads ResearchForge’s technology platform, building the digital systems that support field research, data delivery, and partner engagement across the organisation’s work.',
     image: '/team/male-2.png',
     imageAlt: 'Silhouette of Platform and Technology Lead',

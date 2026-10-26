@@ -5,10 +5,12 @@ export function FounderSpotlight() {
         <div className="spotlight-card reveal">
           <div className="spotlight-media">
             <img src="/founder/option-silhouette.png" alt="ResearchForge founder silhouette" />
+            {/* Name/title hidden for now
             <div className="spotlight-media-tag">
               <div className="name">Emmanuel O. Kolawole</div>
               <div className="role">Founder &amp; Lead Researcher</div>
             </div>
+            */}
           </div>
           <div className="spotlight-body">
             <div className="eyebrow">From the founder</div>
